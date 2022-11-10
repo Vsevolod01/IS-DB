@@ -37,8 +37,8 @@ CREATE TABLE symptoms
 (
     id          SERIAL PRIMARY KEY,
     severity_id INTEGER REFERENCES severity NOT NULL,
-    name        VARCHAR(64)                 NOT NULL,
-    CONSTRAINT uniq_sympt UNIQUE (name)
+    description VARCHAR(64)                 NOT NULL,
+    CONSTRAINT uniq_sympt UNIQUE (description)
 );
 CREATE TABLE rec_sym
 (
