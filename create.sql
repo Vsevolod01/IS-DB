@@ -1,3 +1,18 @@
+DROP TABLE IF EXISTS work;
+DROP TABLE IF EXISTS appointments;
+DROP TABLE IF EXISTS status;
+DROP TABLE IF EXISTS points;
+DROP TABLE IF EXISTS doctors;
+DROP TABLE IF EXISTS specialities;
+DROP TABLE IF EXISTS rec_sym;
+DROP TABLE IF EXISTS recommendations;
+DROP TABLE IF EXISTS symptoms;
+DROP TABLE IF EXISTS severity;
+DROP TABLE IF EXISTS _users;
+DROP TABLE IF EXISTS patients;
+DROP TABLE IF EXISTS clinics;
+DROP TABLE IF EXISTS addresses;
+
 CREATE TABLE recommendations
 (
     id   SERIAL PRIMARY KEY,
@@ -71,7 +86,7 @@ CREATE TABLE patients
     addresses_id INTEGER REFERENCES addresses NOT NULL,
     name         VARCHAR(64)                  NOT NULL,
     phone        BIGINT,
-    BIRTHDATE    DATE
+    BIRTHDATE    DATE                         NOT NULL
 );
 CREATE TABLE _users
 (
@@ -83,10 +98,10 @@ CREATE TABLE _users
 CREATE TABLE appointments
 (
     id          SERIAL PRIMARY KEY,
-    clinics_id  INTEGER REFERENCES clinics  NOT NULL,
-    doctors_id  INTEGER REFERENCES doctors  NOT NULL,
-    patients_id INTEGER REFERENCES patients NOT NULL,
-    status_id   INTEGER REFERENCES status   NOT NULL,
-    date        TIMESTAMP                   NOT NULL,
-    at_home     BOOLEAN                     NOT NULL
+    clinics_id  INTEGER REFERENCES clinics NOT NULL,
+    doctors_id  INTEGER REFERENCES doctors NOT NULL,
+    patients_id INTEGER REFERENCES patients,
+    status_id   INTEGER REFERENCES status  NOT NULL,
+    date        TIMESTAMP                  NOT NULL,
+    at_home     BOOLEAN
 );
