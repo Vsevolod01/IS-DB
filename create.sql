@@ -38,9 +38,7 @@ CREATE TABLE symptoms
     id          SERIAL PRIMARY KEY,
     severity_id INTEGER REFERENCES severity NOT NULL,
     name        VARCHAR(64)                 NOT NULL,
-    description VARCHAR(255)                NOT NULL,
-    CONSTRAINT uniq_sympt1 UNIQUE (name),
-    CONSTRAINT uniq_sympt2 UNIQUE (description)
+    CONSTRAINT uniq_sympt UNIQUE (name)
 );
 CREATE TABLE rec_sym
 (
@@ -111,10 +109,10 @@ CREATE TABLE _users
 CREATE TABLE appointments
 (
     id          SERIAL PRIMARY KEY,
-    work_id  INTEGER REFERENCES work NOT NULL,
+    work_id     INTEGER REFERENCES work   NOT NULL,
     patients_id INTEGER REFERENCES patients,
-    status_id   INTEGER REFERENCES status  NOT NULL,
-    date        TIMESTAMP                  NOT NULL,
+    status_id   INTEGER REFERENCES status NOT NULL,
+    date        TIMESTAMP                 NOT NULL,
     at_home     BOOLEAN,
     CONSTRAINT uniq_app1 UNIQUE (work_id, date),
     CONSTRAINT free CHECK (status_id = 1 and patients_id IS NULL and at_home IS NULL or
