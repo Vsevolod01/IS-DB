@@ -58,7 +58,6 @@ CREATE TABLE doctors
 );
 CREATE TABLE status
 (
-
     id     SERIAL PRIMARY KEY,
     status VARCHAR(64) NOT NULL
 );
@@ -86,7 +85,7 @@ CREATE TABLE patients
     addresses_id INTEGER REFERENCES addresses NOT NULL,
     name         VARCHAR(64)                  NOT NULL,
     phone        BIGINT,
-    BIRTHDATE    DATE                         NOT NULL
+    birthdate    DATE                         NOT NULL
 );
 CREATE TABLE _users
 (
@@ -103,5 +102,7 @@ CREATE TABLE appointments
     patients_id INTEGER REFERENCES patients,
     status_id   INTEGER REFERENCES status  NOT NULL,
     date        TIMESTAMP                  NOT NULL,
-    at_home     BOOLEAN
+    at_home     BOOLEAN,
+    CONSTRAINT free CHECK (status_id = 1 and patients_id IS NULL and at_home IS NULL or
+                           status_id = 2 and patients_id IS NOT NULL and at_home IS NOT NULL)
 );
