@@ -1,4 +1,4 @@
-create function update_adr() returns trigger
+create or replace function update_adr() returns trigger
     language plpgsql
 as
 $$
@@ -12,7 +12,7 @@ BEGIN
 END;
 $$;
 
-create function add_adr(patient_id integer, adr character varying, distr character varying) returns void
+create or replace function add_adr(patient_id integer, adr character varying, distr character varying) returns void
     language plpgsql
 as
 $$
@@ -27,3 +27,38 @@ BEGIN
     UPDATE patients SET addresses_id = new_id WHERE patients.id = patient_id;
 END;
 $$;
+
+create or replace function appoint(appoint_id integer, pid integer, ah boolean) returns boolean
+    language plpgsql
+as
+$$
+BEGIN
+    IF appoint_id NOT IN (SELECT id from appointments) THEN
+        RETURN FALSE;
+    END IF;
+    IF (SELECT status_id FROM appointments WHERE appoint_id = id) = 1 THEN
+        UPDATE appointments SET at_home = ah, patients_id = pid, status_id = 2 WHERE id = appoint_id;
+        RETURN TRUE;
+    END IF;
+    RETURN FALSE;
+END;
+$$;
+
+create or replace function free(appoint_id integer) returns boolean
+    language plpgsql
+as
+$$
+BEGIN
+    IF appoint_id NOT IN (SELECT id from appointments) THEN
+        RETURN FALSE;
+    END IF;
+    IF (SELECT status_id FROM appointments WHERE appoint_id = id) = 2 THEN
+        UPDATE appointments SET at_home = NULL, patients_id = NULL, status_id = 1 WHERE id = appoint_id;
+        RETURN TRUE;
+    END IF;
+    RETURN FALSE;
+END;
+$$;
+
+SELECT appoint(7, 5, FALSE);
+SELECT free(7);
