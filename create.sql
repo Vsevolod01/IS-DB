@@ -58,6 +58,7 @@ CREATE TABLE addresses
     id       SERIAL PRIMARY KEY,
     address  VARCHAR(64) NOT NULL,
     district VARCHAR(64) NOT NULL,
+    cnt INTEGER NOT NULL DEFAULT 1,
     CONSTRAINT uniq_addr UNIQUE (address)
 );
 CREATE TABLE clinics
@@ -103,3 +104,9 @@ CREATE TABLE appointments
     CONSTRAINT free CHECK (status_id = 1 and patients_id IS NULL and at_home IS NULL or
                            status_id = 2 and patients_id IS NOT NULL and at_home IS NOT NULL)
 );
+
+CREATE TRIGGER tr_update_adr
+    AFTER UPDATE OF addresses_id
+    ON patients
+    FOR EACH ROW
+EXECUTE PROCEDURE update_adr();
