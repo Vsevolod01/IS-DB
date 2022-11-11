@@ -79,7 +79,7 @@ CREATE TABLE work
 CREATE TABLE patients
 (
     id           SERIAL PRIMARY KEY,
-    addresses_id INTEGER REFERENCES addresses ON DELETE RESTRICT NOT NULL,
+    addresses_id INTEGER REFERENCES addresses ON DELETE RESTRICT,
     name         VARCHAR(64)                                     NOT NULL,
     phone        BIGINT,
     birthdate    DATE                                            NOT NULL

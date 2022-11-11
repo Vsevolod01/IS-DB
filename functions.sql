@@ -1,6 +1,6 @@
-create or replace function update_adr() returns trigger
-    language plpgsql
-as
+CREATE FUNCTION update_adr() RETURNS TRIGGER
+    LANGUAGE plpgsql
+AS
 $$
 BEGIN
     UPDATE addresses SET cnt=addresses.cnt - 1 WHERE addresses.id = OLD.addresses_id;
@@ -12,9 +12,9 @@ BEGIN
 END;
 $$;
 
-create or replace function add_adr(patient_id integer, adr character varying, distr character varying) returns void
-    language plpgsql
-as
+CREATE FUNCTION add_adr(patient_id INTEGER, adr CHARACTER VARYING, distr CHARACTER VARYING) RETURNS void
+    LANGUAGE plpgsql
+AS
 $$
 DECLARE
     new_id INTEGER;
@@ -22,18 +22,18 @@ BEGIN
     IF adr NOT IN (SELECT address FROM addresses) THEN
         INSERT INTO addresses (address, district)
         VALUES (adr, distr);
-    end if;
+    END IF;
     new_id := (SELECT addresses.id FROM addresses WHERE address = adr);
     UPDATE patients SET addresses_id = new_id WHERE patients.id = patient_id;
 END;
 $$;
 
-create or replace function appoint(appoint_id integer, pid integer, ah boolean) returns boolean
-    language plpgsql
-as
+CREATE OR REPLACE FUNCTION appoint(appoint_id INTEGER, pid INTEGER, ah BOOLEAN) RETURNS BOOLEAN
+    LANGUAGE plpgsql
+AS
 $$
 BEGIN
-    IF appoint_id NOT IN (SELECT id from appointments) THEN
+    IF appoint_id NOT IN (SELECT id FROM appointments) THEN
         RETURN FALSE;
     END IF;
     IF (SELECT status_id FROM appointments WHERE appoint_id = id) = 1 THEN
@@ -44,12 +44,12 @@ BEGIN
 END;
 $$;
 
-create or replace function free(appoint_id integer) returns boolean
-    language plpgsql
-as
+CREATE OR REPLACE FUNCTION free(appoint_id INTEGER) RETURNS BOOLEAN
+    LANGUAGE plpgsql
+AS
 $$
 BEGIN
-    IF appoint_id NOT IN (SELECT id from appointments) THEN
+    IF appoint_id NOT IN (SELECT id FROM appointments) THEN
         RETURN FALSE;
     END IF;
     IF (SELECT status_id FROM appointments WHERE appoint_id = id) = 2 THEN
