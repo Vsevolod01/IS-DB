@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS work;
 DROP TABLE IF EXISTS appointments;
+DROP TABLE IF EXISTS work;
 DROP TABLE IF EXISTS status;
 DROP TABLE IF EXISTS points;
 DROP TABLE IF EXISTS doctors;
@@ -15,9 +15,9 @@ DROP TABLE IF EXISTS addresses;
 
 CREATE TABLE recommendations
 (
-    id   SERIAL PRIMARY KEY,
-    name VARCHAR(64) NOT NULL,
-    CONSTRAINT uniq_rec UNIQUE (name)
+    id          SERIAL PRIMARY KEY,
+    description VARCHAR(64) NOT NULL,
+    CONSTRAINT uniq_rec UNIQUE (description)
 );
 CREATE TABLE severity
 (
@@ -36,31 +36,31 @@ CREATE TABLE specialities
 CREATE TABLE symptoms
 (
     id          SERIAL PRIMARY KEY,
-    severity_id INTEGER REFERENCES severity NOT NULL,
-    description VARCHAR(64)                 NOT NULL,
+    severity_id INTEGER REFERENCES severity ON DELETE RESTRICT NOT NULL,
+    description VARCHAR(64)                                    NOT NULL,
     CONSTRAINT uniq_sympt UNIQUE (description)
 );
 CREATE TABLE rec_sym
 (
     id                 SERIAL PRIMARY KEY,
-    recommendations_id INTEGER REFERENCES recommendations NOT NULL,
-    symptoms_id        INTEGER REFERENCES symptoms        NOT NULL,
+    recommendations_id INTEGER REFERENCES recommendations ON DELETE CASCADE NOT NULL,
+    symptoms_id        INTEGER REFERENCES symptoms ON DELETE CASCADE        NOT NULL,
     CONSTRAINT uniq_rs UNIQUE (recommendations_id, symptoms_id)
 );
 CREATE TABLE points
 (
     id              SERIAL PRIMARY KEY,
-    symptoms_id     INTEGER REFERENCES symptoms     NOT NULL,
-    specialities_id INTEGER REFERENCES specialities NOT NULL,
-    points          INTEGER                         NOT NULL,
+    symptoms_id     INTEGER REFERENCES symptoms ON DELETE CASCADE      NOT NULL,
+    specialities_id INTEGER REFERENCES specialities ON DELETE RESTRICT NOT NULL,
+    points          INTEGER                                            NOT NULL,
     CONSTRAINT uniq_pnts UNIQUE (symptoms_id, specialities_id)
 );
 CREATE TABLE doctors
 (
     id              SERIAL PRIMARY KEY,
-    specialities_id INTEGER REFERENCES specialities NOT NULL,
-    name            VARCHAR(64)                     NOT NULL,
-    experience      INTEGER                         NOT NULL
+    specialities_id INTEGER REFERENCES specialities ON DELETE RESTRICT NOT NULL,
+    name            VARCHAR(64)                                        NOT NULL,
+    experience      INTEGER                                            NOT NULL
 );
 CREATE TABLE status
 (
@@ -78,41 +78,41 @@ CREATE TABLE addresses
 CREATE TABLE clinics
 (
     id           SERIAL PRIMARY KEY,
-    addresses_id INTEGER REFERENCES addresses NOT NULL,
-    number       INTEGER                      NOT NULL,
+    addresses_id INTEGER REFERENCES addresses ON DELETE RESTRICT NOT NULL,
+    number       INTEGER                                         NOT NULL,
     CONSTRAINT uniq_clnc1 UNIQUE (addresses_id),
     CONSTRAINT uniq_clnc2 UNIQUE (number)
 );
 CREATE TABLE work
 (
     id         SERIAL PRIMARY KEY,
-    doctors_id INTEGER REFERENCES doctors NOT NULL,
-    clinics_id INTEGER REFERENCES clinics NOT NULL,
+    doctors_id INTEGER REFERENCES doctors ON DELETE RESTRICT NOT NULL,
+    clinics_id INTEGER REFERENCES clinics ON DELETE RESTRICT NOT NULL,
     CONSTRAINT uniq_wrk UNIQUE (doctors_id, clinics_id)
 );
 CREATE TABLE patients
 (
     id           SERIAL PRIMARY KEY,
-    addresses_id INTEGER REFERENCES addresses NOT NULL,
-    name         VARCHAR(64)                  NOT NULL,
+    addresses_id INTEGER REFERENCES addresses ON DELETE RESTRICT NOT NULL,
+    name         VARCHAR(64)                                     NOT NULL,
     phone        BIGINT,
-    birthdate    DATE                         NOT NULL
+    birthdate    DATE                                            NOT NULL
 );
 CREATE TABLE _users
 (
     id          SERIAL PRIMARY KEY,
-    patients_id INTEGER REFERENCES patients NOT NULL,
-    login       VARCHAR(64)                 NOT NULL,
-    password    VARCHAR(64)                 NOT NULL,
+    patients_id INTEGER REFERENCES patients ON DELETE RESTRICT NOT NULL,
+    login       VARCHAR(64)                                    NOT NULL,
+    password    VARCHAR(64)                                    NOT NULL,
     CONSTRAINT uniq_usr UNIQUE (patients_id)
 );
 CREATE TABLE appointments
 (
     id          SERIAL PRIMARY KEY,
-    work_id     INTEGER REFERENCES work   NOT NULL,
+    work_id     INTEGER REFERENCES work ON DELETE RESTRICT   NOT NULL,
     patients_id INTEGER REFERENCES patients,
-    status_id   INTEGER REFERENCES status NOT NULL,
-    date        TIMESTAMP                 NOT NULL,
+    status_id   INTEGER REFERENCES status ON DELETE RESTRICT NOT NULL,
+    date        TIMESTAMP                                    NOT NULL,
     at_home     BOOLEAN,
     CONSTRAINT uniq_app1 UNIQUE (work_id, date),
     CONSTRAINT free CHECK (status_id = 1 and patients_id IS NULL and at_home IS NULL or
