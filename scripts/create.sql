@@ -56,7 +56,7 @@ CREATE TABLE addresses
     id       SERIAL PRIMARY KEY,
     address  VARCHAR(64) NOT NULL,
     district VARCHAR(64) NOT NULL,
-    cnt INTEGER NOT NULL DEFAULT 1,
+    cnt      INTEGER     NOT NULL DEFAULT 1,
     CONSTRAINT uniq_addr UNIQUE (address)
 );
 CREATE TABLE clinics
@@ -77,9 +77,9 @@ CREATE TABLE patients
 (
     id           SERIAL PRIMARY KEY,
     addresses_id INTEGER REFERENCES addresses ON DELETE RESTRICT,
-    name         VARCHAR(64)                                     NOT NULL,
+    name         VARCHAR(64) NOT NULL,
     phone        BIGINT,
-    birthdate    DATE                                            NOT NULL
+    birthdate    DATE        NOT NULL
 );
 CREATE TABLE users
 (
@@ -92,8 +92,8 @@ CREATE TABLE users
 CREATE TABLE appointments
 (
     id          SERIAL PRIMARY KEY,
-    doctors_id INTEGER NOT NULL,
-    clinics_id INTEGER NOT NULL,
+    doctors_id  INTEGER                                      NOT NULL,
+    clinics_id  INTEGER                                      NOT NULL,
     patients_id INTEGER REFERENCES patients,
     status_id   INTEGER REFERENCES status ON DELETE RESTRICT NOT NULL,
     date        TIMESTAMP                                    NOT NULL,

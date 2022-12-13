@@ -1,7 +1,9 @@
 package com.example.isdb.data;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "severity")
 public class Severity {

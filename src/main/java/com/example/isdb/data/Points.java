@@ -1,7 +1,10 @@
 package com.example.isdb.data;
 
+import com.example.isdb.data.PK.PointsPK;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "points")
 public class Points {

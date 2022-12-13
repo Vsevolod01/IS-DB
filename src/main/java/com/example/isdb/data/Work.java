@@ -1,11 +1,13 @@
 package com.example.isdb.data;
 
+import com.example.isdb.data.PK.WorkPK;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "work")
 public class Work {
-
     @EmbeddedId
     WorkPK id;
 

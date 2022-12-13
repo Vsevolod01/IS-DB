@@ -1,7 +1,9 @@
 package com.example.isdb.data;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "clinics")
 public class Clinic {
@@ -14,5 +16,5 @@ public class Clinic {
     Address address;
 
     @Column(name = "number", nullable = false, unique = true)
-    int number;
+    Integer number;
 }
