@@ -19,7 +19,7 @@ FROM symptoms;
 DELETE
 FROM severity;
 DELETE
-FROM _users;
+FROM users;
 DELETE
 FROM patients;
 DELETE

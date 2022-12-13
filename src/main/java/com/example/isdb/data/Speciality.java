@@ -1,0 +1,17 @@
+package com.example.isdb.data;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "specialities")
+public class Speciality {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
+
+    @Column(name = "name", nullable = false, unique = true)
+    String name;
+
+    @Column(name = "description", nullable = false, unique = true)
+    String description;
+}

@@ -27,18 +27,16 @@ CREATE TABLE symptoms
 );
 CREATE TABLE rec_sym
 (
-    id                 SERIAL PRIMARY KEY,
     recommendations_id INTEGER REFERENCES recommendations ON DELETE CASCADE NOT NULL,
     symptoms_id        INTEGER REFERENCES symptoms ON DELETE CASCADE        NOT NULL,
-    CONSTRAINT uniq_rs UNIQUE (recommendations_id, symptoms_id)
+    PRIMARY KEY (recommendations_id, symptoms_id)
 );
 CREATE TABLE points
 (
-    id              SERIAL PRIMARY KEY,
     symptoms_id     INTEGER REFERENCES symptoms ON DELETE CASCADE      NOT NULL,
     specialities_id INTEGER REFERENCES specialities ON DELETE RESTRICT NOT NULL,
     points          INTEGER                                            NOT NULL,
-    CONSTRAINT uniq_pnts UNIQUE (symptoms_id, specialities_id)
+    PRIMARY KEY (symptoms_id, specialities_id)
 );
 CREATE TABLE doctors
 (
@@ -71,10 +69,9 @@ CREATE TABLE clinics
 );
 CREATE TABLE work
 (
-    id         SERIAL PRIMARY KEY,
     doctors_id INTEGER REFERENCES doctors ON DELETE RESTRICT NOT NULL,
     clinics_id INTEGER REFERENCES clinics ON DELETE RESTRICT NOT NULL,
-    CONSTRAINT uniq_wrk UNIQUE (doctors_id, clinics_id)
+    PRIMARY KEY (doctors_id, clinics_id)
 );
 CREATE TABLE patients
 (
@@ -84,7 +81,7 @@ CREATE TABLE patients
     phone        BIGINT,
     birthdate    DATE                                            NOT NULL
 );
-CREATE TABLE _users
+CREATE TABLE users
 (
     id          SERIAL PRIMARY KEY,
     patients_id INTEGER REFERENCES patients ON DELETE RESTRICT NOT NULL,
@@ -95,12 +92,14 @@ CREATE TABLE _users
 CREATE TABLE appointments
 (
     id          SERIAL PRIMARY KEY,
-    work_id     INTEGER REFERENCES work ON DELETE RESTRICT   NOT NULL,
+    doctors_id INTEGER NOT NULL,
+    clinics_id INTEGER NOT NULL,
     patients_id INTEGER REFERENCES patients,
     status_id   INTEGER REFERENCES status ON DELETE RESTRICT NOT NULL,
     date        TIMESTAMP                                    NOT NULL,
     at_home     BOOLEAN,
-    CONSTRAINT uniq_app1 UNIQUE (work_id, date),
+    FOREIGN KEY (doctors_id, clinics_id) REFERENCES work ON DELETE RESTRICT,
+    CONSTRAINT uniq_app UNIQUE (doctors_id, clinics_id, date),
     CONSTRAINT free CHECK (status_id = 1 and patients_id IS NULL and at_home IS NULL or
                            status_id = 2 and patients_id IS NOT NULL and at_home IS NOT NULL)
 );
