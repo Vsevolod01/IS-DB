@@ -1,5 +1,6 @@
 package com.example.isdb.controller;
 
+import com.example.isdb.data.PK.WorkPK;
 import com.example.isdb.data.Work;
 import com.example.isdb.repository.WorkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,9 @@ public class WorkController {
         return workRepository.findAll();
     }
 
-    @GetMapping("/delete/{id}")
-    public List<Work> delete(@PathVariable long id) {
+    @GetMapping("/delete/d={doctorsId}&c={clinicsId}")
+    public List<Work> delete(@PathVariable long doctorsId, @PathVariable long clinicsId) {
+        WorkPK id = new WorkPK(doctorsId, clinicsId);
         workRepository.deleteById(id);
         return workRepository.findAll();
     }

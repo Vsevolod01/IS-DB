@@ -8,7 +8,7 @@ import lombok.Getter;
 @Table(name = "specialities")
 public class Speciality {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(name = "name", nullable = false, unique = true)

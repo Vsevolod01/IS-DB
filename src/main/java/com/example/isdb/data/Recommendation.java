@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "recommendations")
 public class Recommendation {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(name = "description", nullable = false, unique = true)

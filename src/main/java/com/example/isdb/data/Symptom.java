@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "symptoms")
 public class Symptom {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @ManyToOne

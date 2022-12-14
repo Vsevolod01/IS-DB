@@ -1,5 +1,6 @@
 package com.example.isdb.controller;
 
+import com.example.isdb.data.PK.PointsPK;
 import com.example.isdb.data.Points;
 import com.example.isdb.repository.PointsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,9 @@ public class PointsController {
         return pointsRepository.findAll();
     }
 
-    @GetMapping("/delete/{id}")
-    public List<Points> delete(@PathVariable long id) {
+    @GetMapping("/delete/sy={symptomId}&sp={specialityId}")
+    public List<Points> delete(@PathVariable long symptomId, @PathVariable long specialityId) {
+        PointsPK id = new PointsPK(symptomId, specialityId);
         pointsRepository.deleteById(id);
         return pointsRepository.findAll();
     }

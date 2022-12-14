@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Table(name = "patients")
 public class Patient {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @ManyToOne
