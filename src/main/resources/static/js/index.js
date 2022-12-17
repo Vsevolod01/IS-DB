@@ -62,7 +62,7 @@ function load_symptoms() {
         })
         .then(dataJson => {
             dataJson.forEach(function (symptom) {
-                document.getElementById("symptom").innerHTML += `<option>${symptom.description}</option>`
+                document.getElementsByClassName("over")[0].innerHTML += `<div class="d"><label>${symptom.description}</label><input type="checkbox" name="${symptom.id}"></div>`
             });
         })
         .catch(err => {
@@ -117,21 +117,49 @@ function load_doctors() {
         })
 }
 
-function openForm() {
-    document.getElementById("myForm").style.display = "block";
+function openForm(formName) {
+    document.getElementById(formName).style.display = "block";
     document.getElementById("white").style.display = "block";
 }
 
-function closeForm() {
-    document.getElementById("myForm").style.display = "none";
+function closeForm(formName) {
+    document.getElementById(formName).style.display = "none";
     document.getElementById("white").style.display = "none";
+    if (formName === "myForm2") {
+        document.getElementById("recommendations").innerHTML = ``;
+    }
 }
 
-function addRow() {
-    document.getElementById("sym").insertAdjacentHTML("beforeend", `<label for="symptom">Выберите симптом</label>
-    <select id="symptom" name="symptom" class="in">
-        <option disabled selected>Симптомы</option>
-    </select>`);
+function sendResults() {
+    let symptoms = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'));
+    let reqSet = Array.from(new Set(symptoms.map(e => e.name)));
+    fetch("/symptom/", {
+        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(reqSet)
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .then(dataJson => {
+            dataJson.forEach(function (symptom) {
+                document.getElementById("recommendations").innerHTML += `
+                    <label><b>${symptom.description}</b></label>`;
+                for (const recKey of symptom.recommendations) {
+                    document.getElementById("recommendations").innerHTML += `
+                    <label><b>${recKey.description}</b></label>`;
+                }
+            });
+        })
+        .catch(err => {
+            if (err === "server") return
+            console.log(err)
+        })
+    document.getElementById("myForm2").style.display = "block";
+    document.getElementById("white").style.display = "block";
 }
 
 document.addEventListener("DOMContentLoaded", function () {

@@ -34,4 +34,9 @@ public class SymptomController {
         symptomRepository.deleteById(id);
         return symptomRepository.findAll();
     }
+
+    @PostMapping("/")
+    public List<Symptom> results(@RequestBody List<Long> symptoms) {
+        return symptomRepository.findAllById(symptoms);
+    }
 }

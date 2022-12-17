@@ -14,13 +14,14 @@
         <div class="container">
             <a href="/"><img src="/assets/logo.png" alt="logo" class="logo"></a>
             <p class="title"><a href="/">Мой доктор</a></p>
-            <button class="btn" onclick="openForm()">Личный кабинет</button>
+            <button class="btn" onclick="openForm('myForm')">Личный кабинет</button>
         </div>
     </div>
 </header>
 <div class="form-popup" id="myForm">
     <form class="form-container">
-        <h4><a href="#" onclick="openForm()">Войти</a>/<a href="#" onclick="comeOut()">Зарегистрироваться</a></h4>
+        <h4><a href="#" onclick="openForm('myForm')">Войти</a>/<a href="#" onclick="comeOut()">Зарегистрироваться</a>
+        </h4>
 
         <label for="login"><b>Логин</b></label>
         <label>
@@ -33,7 +34,19 @@
         </label>
 
         <button type="submit" class="btn btn-form">Войти</button>
-        <button type="submit" class="btn btn-form cancel" onclick="closeForm()">Закрыть</button>
+        <button type="submit" class="btn btn-form cancel" onclick="closeForm('myForm')">Закрыть</button>
+    </form>
+</div>
+<div class="form-popup" id="myForm2">
+    <form class="form-container">
+        <h4>Рекомендации</h4>
+        <div id="recommendations">
+        </div>
+        <h4>Специалист(ы?)</h4>
+        <div id="rec_specialists">
+        </div>
+        <label><b>Доктор Зло</b></label>
+        <button type="submit" class="btn btn-form cancel" onclick="closeForm('myForm2')">Закрыть</button>
     </form>
 </div>
 <div id="white"></div>
@@ -125,20 +138,17 @@
             <button class="btn res">Показать подходящие варианты</button>
         </div>
     </form>
-    <form id="form-2" class="forms">
+    <div id="form-2" class="forms">
         <h2 class="title-2">Определить специалиста</h2>
         <div class="col" id="sym">
-            <label for="symptom">Выберите симптом</label>
-            <select id="symptom" name="symptom" class="in">
-                <option disabled selected>Симптомы</option>
-            </select>
+            <label>Выберите симптомы</label>
+            <div class="over"></div>
         </div>
         <div class="col-bottom">
-            <button class="pl" onclick="addRow()" type="button"><img src="/assets/plus.png" alt="plus" class="plus">
-            </button>
-            <button class="btn res">Показать результаты</button>
+            <label>&nbsp;</label>
+            <button class="btn res" onclick="sendResults()">Показать результаты</button>
         </div>
-    </form>
+    </div>
 </main>
 <footer>
     <p><a href="/assets/viola.png" id="easter-egg">Все права защищены, копирование очень жестоко карается</a></p>
