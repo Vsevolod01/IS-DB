@@ -14,10 +14,6 @@ public class Symptom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "severity_id", nullable = false)
-    Severity severity;
-
     @Column(name = "description", nullable = false, unique = true)
     String description;
 

@@ -30,10 +30,15 @@ public class PointsController {
         return pointsRepository.findAll();
     }
 
-    @GetMapping("/delete/sy={symptomId}&sp={specialityId}")
-    public List<Points> delete(@PathVariable long symptomId, @PathVariable long specialityId) {
-        PointsPK id = new PointsPK(symptomId, specialityId);
+    @GetMapping("/delete/sy={symptomId}&se={severityId}")
+    public List<Points> delete(@PathVariable long symptomId, @PathVariable long severityId) {
+        PointsPK id = new PointsPK(symptomId, severityId);
         pointsRepository.deleteById(id);
         return pointsRepository.findAll();
+    }
+
+    @PostMapping("/")
+    public List<Points> selectByIds(@RequestBody List<PointsPK> symToSev) {
+        return pointsRepository.findAllById(symToSev);
     }
 }

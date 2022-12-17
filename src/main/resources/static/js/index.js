@@ -62,7 +62,9 @@ function load_symptoms() {
         })
         .then(dataJson => {
             dataJson.forEach(function (symptom) {
-                document.getElementsByClassName("over")[0].innerHTML += `<div class="d"><label>${symptom.description}</label><input type="checkbox" name="${symptom.id}"></div>`
+                document.getElementsByClassName("over")[0].innerHTML += `<div class="d"><label>${symptom.description}</label><input type="checkbox" name="${symptom.id}">
+                    <input id="sev${symptom.id}" type="number" class="in" min="1" max="5" placeholder="От 1 до 5">
+                    </div>`
             });
         })
         .catch(err => {
@@ -131,10 +133,10 @@ function closeForm(formName) {
 }
 
 function sendResults() {
-    let symptoms = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'));
-    let reqSet = Array.from(new Set(symptoms.map(e => e.name)));
-    fetch("/symptom/", {
-        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(reqSet)
+    let symptoms = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(e => Number(e.name));
+    let symToSev = symptoms.map(e => ({"symptomId": e, "severityId": Number(document.getElementById("sev" + e).value)}));
+    fetch("/points/", {
+        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(symToSev)
     })
         .then(resp => {
             if (resp.status === 200) {
@@ -145,13 +147,26 @@ function sendResults() {
             }
         })
         .then(dataJson => {
-            dataJson.forEach(function (symptom) {
+            let max = 0;
+            let sev_result = "";
+            dataJson.forEach(function (points) {
+                console.log(points);
                 document.getElementById("recommendations").innerHTML += `
-                    <label><b>${symptom.description}</b></label>`;
-                for (const recKey of symptom.recommendations) {
+                    <label><b>${points.symptom.description}</b></label>`;
+                for (const recKey of points.symptom.recommendations) {
                     document.getElementById("recommendations").innerHTML += `
                     <label><b>${recKey.description}</b></label>`;
                 }
+                if (points.severity.id > 2) {
+                    document.getElementById("rec_specialists").innerHTML += `
+                    <label><b>${points.speciality.name}</b></label><label><b>${points.speciality.description}</b></label>`;
+                }
+                if (points.severity.id > max) {
+                    max = points.severity.id;
+                    sev_result = points.severity.treatType;
+                }
+                document.getElementById("treat_type").innerHTML += `
+                <label><b>${sev_result}</b></label>`;
             });
         })
         .catch(err => {
@@ -161,7 +176,6 @@ function sendResults() {
     document.getElementById("myForm2").style.display = "block";
     document.getElementById("white").style.display = "block";
 }
-
 document.addEventListener("DOMContentLoaded", function () {
     load_districts();
     load_clinics();

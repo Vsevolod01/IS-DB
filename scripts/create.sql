@@ -7,8 +7,7 @@ CREATE TABLE recommendations
 CREATE TABLE severity
 (
     id         SERIAL PRIMARY KEY,
-    treat_type VARCHAR(64),
-    CONSTRAINT uniq_sev UNIQUE (treat_type)
+    treat_type VARCHAR(64)
 );
 CREATE TABLE specialities
 (
@@ -21,7 +20,6 @@ CREATE TABLE specialities
 CREATE TABLE symptoms
 (
     id          SERIAL PRIMARY KEY,
-    severity_id INTEGER REFERENCES severity ON DELETE RESTRICT NOT NULL,
     description VARCHAR(64)                                    NOT NULL,
     CONSTRAINT uniq_sympt UNIQUE (description)
 );
@@ -35,8 +33,8 @@ CREATE TABLE points
 (
     symptoms_id     INTEGER REFERENCES symptoms ON DELETE CASCADE      NOT NULL,
     specialities_id INTEGER REFERENCES specialities ON DELETE RESTRICT NOT NULL,
-    points          INTEGER                                            NOT NULL,
-    PRIMARY KEY (symptoms_id, specialities_id)
+    severity_id     INTEGER REFERENCES severity ON DELETE RESTRICT     NOT NULL,
+    PRIMARY KEY (symptoms_id, severity_id)
 );
 CREATE TABLE doctors
 (

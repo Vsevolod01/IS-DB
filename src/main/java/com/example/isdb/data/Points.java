@@ -21,6 +21,8 @@ public class Points {
     @JoinColumn(name = "specialities_id")
     Speciality speciality;
 
-    @Column(name = "points", nullable = false)
-    Integer points;
+    @ManyToOne
+    @MapsId("severityId")
+    @JoinColumn(name = "severity_id")
+    Severity severity;
 }
