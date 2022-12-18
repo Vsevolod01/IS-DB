@@ -133,25 +133,41 @@ function closeForm(formName) {
     document.getElementById("white").style.display = "none";
     if (formName === "myForm2") {
         document.getElementById("recommendations").innerHTML = ``;
+        document.getElementById("treat_type").innerHTML = ``;
+        document.getElementById("rec_specialists").innerHTML = ``;
     }
 }
 
-function sendResults() {
-    let symptoms = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(e => Number(e.name));
-    if (symptoms.length === 0) {
-        alert("Выберите хотя бы один атрибут!");
-        return;
-    }
-    let symToSev = symptoms.map(e => ({
-        "symptomId": e,
-        "severityId": Number(document.getElementById("sev" + e).value)
-    }));
-    for (const ss of symToSev) {
-        if (ss.severityId < 1 || ss.severityId > 5) {
-            alert("Введите целое число от 1 до 5!");
-            return;
-        }
-    }
+function sendSymptoms(symptoms) {
+    fetch("/symptom/", {
+        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(symptoms)
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .then(dataJson => {
+            dataJson.forEach(function (symptom) {
+                console.log(symptom);
+                document.getElementById("recommendations").innerHTML += `
+                    <label><b>${symptom.description}</b></label>`;
+                for (const recKey of symptom.recommendations) {
+                    document.getElementById("recommendations").innerHTML += `
+                    <label><b>${recKey.description}</b></label>`;
+                }
+            });
+        })
+        .catch(err => {
+            if (err === "server") return
+            console.log(err)
+        })
+}
+
+function sendSymToSev(symToSev) {
     fetch("/points/", {
         method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(symToSev)
     })
@@ -168,12 +184,6 @@ function sendResults() {
             let sev_result = "";
             dataJson.forEach(function (points) {
                 console.log(points);
-                document.getElementById("recommendations").innerHTML += `
-                    <label><b>${points.symptom.description}</b></label>`;
-                for (const recKey of points.symptom.recommendations) {
-                    document.getElementById("recommendations").innerHTML += `
-                    <label><b>${recKey.description}</b></label>`;
-                }
                 if (points.severity.id > 2) {
                     document.getElementById("rec_specialists").innerHTML += `
                     <label><b>${points.speciality.name}</b></label><label><b>${points.speciality.description}</b></label>`;
@@ -190,9 +200,28 @@ function sendResults() {
             if (err === "server") return
             console.log(err)
         })
-    document.getElementById("myForm2").style.display = "block";
-    document.getElementById("white").style.display = "block";
 }
+
+function sendResults() {
+    let symptoms = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(e => Number(e.name));
+    if (symptoms.length === 0) {
+        alert("Выберите хотя бы один атрибут!");
+        return;
+    }
+    sendSymptoms(symptoms);
+    let symToSev = symptoms.map(e => ({
+        "symptomId": e, "severityId": Number(document.getElementById("sev" + e).value)
+    }));
+    for (const ss of symToSev) {
+        if (ss.severityId < 1 || ss.severityId > 5) {
+            alert("Введите целое число от 1 до 5!");
+            return;
+        }
+    }
+    sendSymToSev(symToSev);
+    openForm("myForm2")
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     load_districts();
     load_clinics();
