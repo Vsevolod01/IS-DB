@@ -193,7 +193,6 @@ function sendResults() {
     document.getElementById("myForm2").style.display = "block";
     document.getElementById("white").style.display = "block";
 }
-
 document.addEventListener("DOMContentLoaded", function () {
     load_districts();
     load_clinics();
