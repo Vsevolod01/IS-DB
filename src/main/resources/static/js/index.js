@@ -1,3 +1,52 @@
+function comeIn() {
+    let user = {
+        login: document.getElementById("login").value,
+        password: document.getElementById("psw").value
+    };
+    fetch("/user/check", {
+        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .then(async result => {
+            if (result.length !== 0) {
+                await designBtn(result[0].login);
+            }
+            else {
+                document.getElementById("neOk").style.display = "block";
+            }
+        })
+}
+
+async function designBtn(name) {
+    document.getElementById("neOk").style.display = "none";
+    document.getElementById("ok").style.display = "block";
+    await new Promise(r => setTimeout(r, 1000));
+    document.getElementById("myForm").style.display = "none";
+    document.getElementById("white").style.display = "none";
+
+    document.querySelector(".container").innerHTML +=
+        `<p id="newText">Здравствуйте,<br>${name}</p><button id="btn-exit" class="btn" onclick="exit()">Выйти</button>`
+
+    document.getElementById("btn-one").style.display = "none";
+    document.getElementById("ok").style.display = "none";
+}
+
+function exit() {
+    document.getElementById("newText").remove();
+    document.getElementById("btn-exit").remove();
+    document.getElementById("btn-one").style.display="block";
+}
+
+
+
+
 function load_districts() {
     fetch("/clinic/all", {
         method: "get", headers: {"Content-Type": "application/json"}

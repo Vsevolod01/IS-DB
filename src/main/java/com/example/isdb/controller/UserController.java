@@ -5,6 +5,7 @@ import com.example.isdb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.util.List;
 
 @RestController
@@ -33,5 +34,10 @@ public class UserController {
     public List<User> delete(@PathVariable long id) {
         userRepository.deleteById(id);
         return userRepository.findAll();
+    }
+
+    @PostMapping("/check")
+    public List<User> results(@RequestBody User user) {
+        return userRepository.findByLoginAndPassword(user.getLogin(), user.getPassword());
     }
 }
