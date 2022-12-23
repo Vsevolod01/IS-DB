@@ -1,3 +1,67 @@
+let nodeClinics = document.getElementById(`dist`);
+nodeClinics.addEventListener('change', function() {
+    let choice = this.options[this.selectedIndex].text;
+    load_clinics(choice);
+})
+
+function singUp() {
+        let patient = {
+        name: document.getElementById("fio").value,
+        phone: document.getElementById("tel").value,
+        birthdate: document.getElementById("bd").value
+    }
+
+    fetch("/patient/create", {
+        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(patient)
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .then(pat => {
+            let address = {
+                id: pat.id,
+                address: document.getElementById("address").value,
+                district: document.getElementById("region").value,
+                cnt: 0
+            }
+            fetch("/address/create", {
+                method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(address)
+            })
+                .then(resp => {
+                    if (resp.status === 200) {
+                        return pat
+                    } else {
+                        console.log("Status: " + resp.status)
+                        return Promise.reject("server")
+                    }
+                });
+
+        })
+        .then(pat => {
+            let user = {
+                id: pat.id,
+                login: document.getElementById("username").value,
+                password: document.getElementById("password").value
+            };
+            fetch("/user/create", {
+                method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
+            })
+                .then(resp => {
+                    if (resp.status === 200) {
+                        return resp.json()
+                    } else {
+                        console.log("Status: " + resp.status)
+                        return Promise.reject("server")
+                    }
+                });
+        })
+}
+
 function comeIn() {
     let user = {
         login: document.getElementById("login").value,
@@ -74,27 +138,40 @@ function load_districts() {
         })
 }
 
-function load_clinics() {
-    fetch("/clinic/all", {
-        method: "get", headers: {"Content-Type": "application/json"}
-    })
-        .then(resp => {
-            if (resp.status === 200) {
-                return resp.json()
-            } else {
-                console.log("Status: " + resp.status)
-                return Promise.reject("server")
-            }
-        })
-        .then(dataJson => {
-            dataJson.forEach(function (clinic) {
-                document.getElementById("hospital").innerHTML += `<option>${clinic.number}</option>`
-            });
-        })
-        .catch(err => {
-            if (err === "server") return
-            console.log(err)
-        })
+function load_clinics(choice_region) {
+    // fetch("/address/find/" + choice_region, {
+    //     method: "get", headers: {"Content-Type": "application/json"}
+    // })
+    //     .then(resp => {
+    //         if (resp.status === 200) {
+    //             return resp.json()
+    //         } else {
+    //             console.log("Status: " + resp.status)
+    //             return Promise.reject("server")
+    //         }
+    //     })
+    //     .then(dataJson => {
+    //         let distSet = new Set()
+    //         dataJson.forEach(function (adr) {
+    //             distSet.add(adr.id)
+    //         });
+    //         let adrId = {values: distSet};
+            fetch("/clinic/find/" + choice_region, {
+                method: "get", headers: {"Content-Type": "application/json"}//, body: JSON.stringify(Array.from(distSet))
+            })
+                .then(resp => {
+                    if (resp.status === 200) {
+                        return resp.json()
+                    } else {
+                        console.log("Status: " + resp.status)
+                        return Promise.reject("server")
+                    }
+                })
+                .then(dataJson => {
+                    dataJson.forEach(function (clinic) {
+                        document.getElementById("hospital").innerHTML += `<option>${clinic.number}</option>`
+                    });
+                })
 }
 
 function load_symptoms() {
@@ -175,6 +252,13 @@ function load_doctors() {
 function openForm(formName) {
     document.getElementById(formName).style.display = "block";
     document.getElementById("white").style.display = "block";
+
+    if (formName === 'myForm') {
+        document.getElementById('form-singUp').style.display = "none";
+    }
+    if (formName === 'form-singUp') {
+        document.getElementById('myForm').style.display = "none";
+    }
 }
 
 function closeForm(formName) {
@@ -273,7 +357,6 @@ function sendResults() {
 
 document.addEventListener("DOMContentLoaded", function () {
     load_districts();
-    load_clinics();
     load_symptoms();
     load_specialities();
     load_doctors();

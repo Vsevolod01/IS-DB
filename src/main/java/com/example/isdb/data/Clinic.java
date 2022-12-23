@@ -12,9 +12,9 @@ public class Clinic {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "addresses_id", nullable = false, unique = true)
+    @JoinColumn(name = "addresses_id", unique = true)
     Address address;
 
-    @Column(name = "number", nullable = false, unique = true)
+    @Column(name = "number", unique = true)
     Integer number;
 }

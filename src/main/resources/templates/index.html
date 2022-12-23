@@ -20,8 +20,7 @@
 </header>
 <div class="form-popup" id="myForm">
     <div class="form-container" id="form-hidden-1">
-        <h4><a href="#" onclick="openForm('myForm')">Войти</a>/<a href="#" onclick="comeOut()">Зарегистрироваться</a>
-        </h4>
+        <h4><a href="#" onclick="openForm('myForm')">Войти</a>/<a href="#" onclick="openForm('form-singUp')">Зарегистрироваться</a></h4>
 
         <label for="login"><b>Логин</b></label>
         <label>
@@ -38,6 +37,52 @@
 
         <p id="ok" class="login-res">Вход выполнен!</p>
         <p id="neOk" class="login-res">Ошибка входа</p>
+    </div>
+</div>
+<div class="form-popup" id="form-singUp">
+    <div class="form-container" id="form-hidden-2">
+        <h4><a href="#" onclick="openForm('myForm')">Войти</a>/<a href="#" onclick="openForm('form-singUp')">Зарегистрироваться</a></h4>
+
+        <label for="fio"><b>ФИО</b></label>
+        <label>
+            <input id="fio" class="in" type="text" placeholder="Ваши ФИО" name="fio" required>
+        </label>
+
+        <label for="bd"><b>Дата рождения</b></label>
+        <label>
+            <input id="bd" class="in" type="date" placeholder="01.01.2000" name="bd" required>
+        </label>
+
+        <label for="tel"><b>Номер телефона</b></label>
+        <label>
+            <input id="tel" class="in" type="tel" placeholder="+7 999 999 99 99" name="tel" required>
+        </label>
+
+        <label for="region"><b>Район проживания</b></label>
+        <label>
+            <input id="region" class="in" type="text" placeholder="Район" name="region" required>
+        </label>
+
+        <label for="address"><b>Адрес проживания</b></label>
+        <label>
+            <input id="address" class="in" type="text" placeholder="Ваш адрес" name="address" required>
+        </label>
+
+        <label for="username"><b>Придумайте логин</b></label>
+        <label>
+            <input id="username" class="in" type="text" placeholder="Ваш адрес" name="Логин" required>
+        </label>
+
+        <label for="password"><b>Придумайте пароль</b></label>
+        <label>
+            <input id="password" class="in" type="password" placeholder="Пароль" name="password" required>
+        </label>
+
+        <button type="submit" class="btn btn-form" onclick="singUp()">Регистрация</button>
+        <button type="submit" class="btn btn-form cancel" onclick="closeForm('form-singUp')">Закрыть</button>
+
+        <p id="done" class="login-res">Вы успешно зарегистрировались!</p>
+        <p id="neDone" class="login-res">Ошибка регистрации</p>
     </div>
 </div>
 <div class="form-popup" id="myForm2">

@@ -54,7 +54,7 @@ CREATE TABLE addresses
     id       SERIAL PRIMARY KEY,
     address  VARCHAR(64) NOT NULL,
     district VARCHAR(64) NOT NULL,
-    cnt      INTEGER     NOT NULL DEFAULT 1,
+    cnt      INTEGER     NOT NULL DEFAULT 0,
     CONSTRAINT uniq_addr UNIQUE (address)
 );
 CREATE TABLE clinics
@@ -107,3 +107,8 @@ CREATE TRIGGER tr_update_adr
     ON patients
     FOR EACH ROW
 EXECUTE PROCEDURE update_adr();
+
+CREATE TRIGGER tr_add_adr
+    AFTER INSERT ON patients
+    FOR EACH ROW
+    EXECUTE PROCEDURE add_adr();

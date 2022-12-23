@@ -282,7 +282,7 @@ footer p {
 }
 
 /* Поля ввода полной ширины */
-.form-container input[type=text], .form-container input[type=password] {
+.form-container input {
     width: 90%;
     padding: 0 18px;
     background: #f1f1f1;
@@ -303,6 +303,10 @@ footer p {
 
 .cancel {
     background-color: orangered;
+}
+
+#form-singUp {
+    margin-top: -50px;
 }
 
 #white {

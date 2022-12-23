@@ -11,12 +11,12 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "address", nullable = false, unique = true)
+    @Column(name = "address", nullable = true, unique = true)
     String address;
 
-    @Column(name = "district", nullable = false)
+    @Column(name = "district", nullable = true)
     String district;
 
-    @Column(name = "cnt", nullable = false)
-    Integer cnt = 1;
+    @Column(name = "cnt", nullable = true)
+    Integer cnt = 0;
 }

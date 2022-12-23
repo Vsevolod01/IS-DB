@@ -24,9 +24,9 @@ public class PatientController {
     }
 
     @PostMapping("/create")
-    public List<Patient> create(@RequestBody Patient patient) {
-        patientRepository.save(patient);
-        return patientRepository.findAll();
+    public Patient create(@RequestBody Patient patient) {
+        patient = patientRepository.save(patient);
+        return patient;
     }
 
     @GetMapping("/delete/{id}")
