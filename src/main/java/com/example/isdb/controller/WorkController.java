@@ -30,6 +30,11 @@ public class WorkController {
         return workRepository.findAll();
     }
 
+    @GetMapping("/findByClinic/{id}")
+    public List<Work> find(@PathVariable long id) {
+        return workRepository.findByClinicId(id);
+    }
+
     @GetMapping("/delete/d={doctorsId}&c={clinicsId}")
     public List<Work> delete(@PathVariable long doctorsId, @PathVariable long clinicsId) {
         WorkPK id = new WorkPK(doctorsId, clinicsId);

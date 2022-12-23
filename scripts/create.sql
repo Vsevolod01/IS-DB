@@ -107,8 +107,3 @@ CREATE TRIGGER tr_update_adr
     ON patients
     FOR EACH ROW
 EXECUTE PROCEDURE update_adr();
-
-CREATE TRIGGER tr_add_adr
-    AFTER INSERT ON patients
-    FOR EACH ROW
-    EXECUTE PROCEDURE add_adr();

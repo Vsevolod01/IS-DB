@@ -11,5 +11,8 @@ import java.util.Set;
 @Repository
 public interface ClinicRepository extends JpaRepository<Clinic, Long> {
     List<Clinic> findAllByAddressDistrict(String district);
+
+    List<Clinic> findByNumber(Integer number);
+
     //List<Clinic> findAllByDistrict(String district);
 }

@@ -34,8 +34,12 @@ public class ClinicController {
 
     @GetMapping("/find/{district}")
     public List<Clinic> find(@PathVariable String district) {
-        List<Clinic> k = clinicRepository.findAllByAddressDistrict(district);
-        return k;
+        return clinicRepository.findAllByAddressDistrict(district);
+    }
+
+    @GetMapping("/findId/{number}")
+    public List<Clinic> find(@PathVariable Integer number) {
+        return clinicRepository.findByNumber(number);
     }
 
     @GetMapping("/delete/{id}")

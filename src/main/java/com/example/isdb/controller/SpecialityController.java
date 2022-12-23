@@ -29,6 +29,11 @@ public class SpecialityController {
         return specialityRepository.findAll();
     }
 
+    @GetMapping("/find/{district}")
+    public List<Speciality> find(@PathVariable String district) {
+        return specialityRepository.findAll();
+    }
+
     @GetMapping("/delete/{id}")
     public List<Speciality> delete(@PathVariable long id) {
         specialityRepository.deleteById(id);
