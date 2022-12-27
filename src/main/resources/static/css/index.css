@@ -6,14 +6,11 @@ body {
     color: #0054B7;
 }
 
-.d {
-    width: 100px;
-}
 
 .over {
     border: 1px solid blue;
     height: 200px;
-    overflow-y: scroll;
+    overflow: auto;
 }
 
 a {
@@ -25,7 +22,7 @@ header {
 }
 
 main {
-    padding: 50px 280px;
+    padding: 50px 15%;
 }
 
 a {
@@ -318,4 +315,65 @@ footer p {
     background-color: white;
     opacity: 70%;
     margin-top: -150px;
+}
+
+#myForm3 {
+    padding: 10px;
+    background-color: white;
+}
+
+#myForm3 form-container {
+    max-height: 519px;
+    overflow: auto;
+}
+
+.talon {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+#talons p {
+    margin: 0;
+    font-size: 14px;
+}
+
+#talons input {
+    width: auto;
+}
+
+#talons div {
+    padding: 0 10px;
+}
+
+#sym p {
+    margin-top: 0;
+}
+
+.d {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.dd {
+    display: flex;
+}
+
+.dd p {
+    margin: 0;
+    font-size: 18px;
+    align-self: center;
+    padding-left: 10px;
+}
+
+.d .in {
+    width: 100px;
+    height: 30px;
+    align-self: center;
+    margin: 0;
+}
+
+.ss {
+    margin: 0;
+    font-size: 18px;
 }

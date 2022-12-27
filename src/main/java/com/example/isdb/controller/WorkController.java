@@ -1,5 +1,6 @@
 package com.example.isdb.controller;
 
+import com.example.isdb.data.Doctor;
 import com.example.isdb.data.PK.WorkPK;
 import com.example.isdb.data.Work;
 import com.example.isdb.repository.WorkRepository;
@@ -32,7 +33,13 @@ public class WorkController {
 
     @GetMapping("/findByClinic/{id}")
     public List<Work> find(@PathVariable long id) {
-        return workRepository.findByClinicId(id);
+        return workRepository.findAllByClinicId(id);
+    }
+
+    @GetMapping("/findByClinicAndSpeciality/{clinicNumber}/{doctorSpecialityName}")
+    public List<Work> find(@PathVariable Integer clinicNumber, @PathVariable String doctorSpecialityName) {
+        List<Work> r = workRepository.findAllByClinicNumberAndDoctorSpecialityName(clinicNumber, doctorSpecialityName);
+        return workRepository.findAllByClinicNumberAndDoctorSpecialityName(clinicNumber, doctorSpecialityName);
     }
 
     @GetMapping("/delete/d={doctorsId}&c={clinicsId}")

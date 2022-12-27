@@ -10,6 +10,90 @@ nodeSpecialist.addEventListener('change', function() {
     load_specialities(Number(choice));
 })
 
+let nodeDoctor = document.getElementById(`specialist`);
+nodeDoctor.addEventListener('change', function() {
+    let choice = this.options[this.selectedIndex].text;
+    load_doctors_new(choice);
+})
+
+function registration() {
+    let name = document.getElementById(`name`);
+    let birthday = document.getElementById(`db`);
+    let phone = document.getElementById(`phone`);
+    let address = document.getElementById(`adr`);
+
+    let checked = Number(document.querySelector('#talons input[name="talon"]:checked').nextElementSibling.querySelector(`.talonId`).innerHTML);
+
+    //Передаём параметры пациента в базу, изменяем статус талона
+}
+
+function show_ticket() {
+    openForm('myForm3');
+
+    let districtNode = document.getElementById(`dist`);
+    let district = districtNode.options[districtNode.selectedIndex].text;
+    let clinicNode = document.getElementById(`hospital`);
+    let clinicNum = Number(clinicNode.options[clinicNode.selectedIndex].text);
+    let specialistNode = document.getElementById(`specialist`);
+    let specialist = specialistNode.options[specialistNode.selectedIndex].text;
+    let doctorNode = document.getElementById(`doctor`);
+    let doctor = doctorNode.options[doctorNode.selectedIndex].text;
+
+    let date = document.getElementById(`date`).value;
+
+    let params = {
+        district: district,
+        clinic: clinicNum,
+        specialist: specialist,
+        doctor: doctor
+    };
+
+    fetch("/appointment/find", {
+        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(params)
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .then(tickets => {
+            if (tickets.length === 0) {
+                drawTalonNull();
+            }
+            else {
+                document.getElementById(`talons`).innerHTML = ``;
+                tickets.forEach(function (ticket) {
+                    drawTalon(ticket.id, ticket.work.doctor.speciality.name, ticket.work.doctor.name, ticket.work.clinic.address.address, ticket.date);
+                })
+            }
+        })
+
+}
+
+function drawTalonNull() {
+    document.getElementById(`talons`).innerHTML = ``;
+    document.querySelector(`#talonRes h4`).innerHTML = `Талонов не найдено :(`;
+    document.getElementById(`registration`).disabled = true;
+}
+
+function drawTalon(id, speciality, doctor, address, date) {
+    document.getElementById(`talons`).innerHTML +=
+        `<div class="talon">
+            <input type="radio" class="talonItem" name="talon">
+            <div>
+                <p>Талон №</p>
+                <p class="talonId">${id}</p>
+                <p>${speciality}</p>
+                <p>${doctor}</p>
+                <p>${address}</p>
+                <p>${date}</p>
+            </div>
+        </div>`;
+}
+
 function signUp() {
         let patient = {
         name: document.getElementById("fio").value,
@@ -144,6 +228,8 @@ function load_districts() {
 }
 
 function load_clinics(choice_region) {
+    document.getElementById("specialist").innerHTML = `<option selected>-</option>`;
+    document.getElementById("doctor").innerHTML = `<option selected>-</option>`;
     fetch("/clinic/find/" + choice_region, {
                 method: "get", headers: {"Content-Type": "application/json"}//, body: JSON.stringify(Array.from(distSet))
             })
@@ -156,6 +242,7 @@ function load_clinics(choice_region) {
                     }
                 })
                 .then(dataJson => {
+                    document.getElementById("hospital").innerHTML = `<option selected>-</option>`;
                     dataJson.forEach(function (clinic) {
                         document.getElementById("hospital").innerHTML += `<option>${clinic.number}</option>`
                     });
@@ -177,7 +264,7 @@ function load_symptoms() {
         })
         .then(dataJson => {
             dataJson.forEach(function (symptom) {
-                document.getElementsByClassName("over")[0].innerHTML += `<div class="d"><label>${symptom.description}</label><input type="checkbox" name="${symptom.id}" onchange="changeInput(this)">
+                document.getElementsByClassName("over")[0].innerHTML += `<div class="d"><div class="dd"><input type="checkbox" name="${symptom.id}" onchange="changeInput(this)"><p>${symptom.description}</p></div>
                     <input id="sev${symptom.id}" type="number" class="in" min="1" max="5" placeholder="От 1 до 5" hidden>
                     </div>`
             });
@@ -189,6 +276,7 @@ function load_symptoms() {
 }
 
 function load_specialities(choice_clinic) {
+    document.getElementById("doctor").innerHTML = `<option selected>-</option>`;
     fetch("/clinic/findId/" + choice_clinic, {
         method: "get", headers: {"Content-Type": "application/json"}
     })
@@ -201,7 +289,7 @@ function load_specialities(choice_clinic) {
             }
         })
         .then(dataJson => {
-            let clinic_id = dataJson.id;
+            let clinic_id = dataJson[0].id;
             fetch("/work/findByClinic/" + clinic_id, {
                 method: "get", headers: {"Content-Type": "application/json"}
             })
@@ -214,7 +302,14 @@ function load_specialities(choice_clinic) {
                     }
                 })
                 .then(res => {
-                    console.log(res);
+                    document.getElementById("specialist").innerHTML = `<option selected>-</option>`;
+                    let specialists = new Set();
+                    res.forEach(function (doctors) {
+                        specialists.add(doctors.doctor.speciality.name);
+                    })
+                    specialists.forEach(function (s) {
+                        document.getElementById("specialist").innerHTML += `<option>${s}</option>`;
+                    })
                 })
         })
         .catch(err => {
@@ -222,6 +317,29 @@ function load_specialities(choice_clinic) {
             console.log(err)
         })
 }
+
+function load_doctors_new(choice_speciality) {
+    let clinic_num_Node = document.getElementById(`hospital`);
+    let clinic_num = clinic_num_Node.options[clinic_num_Node.selectedIndex].text;
+    fetch(`/work/findByClinicAndSpeciality/${clinic_num}/${choice_speciality}`, {
+        method: "get", headers: {"Content-Type": "application/json"}
+    })
+        .then(resp2 => {
+            if (resp2.status === 200) {
+                return resp2.json()
+            } else {
+                console.log("Status: " + resp1.status)
+                return Promise.reject("server")
+            }
+        })
+        .then(doctors => {
+            document.getElementById("doctor").innerHTML = `<option selected>-</option>`;
+            doctors.forEach(function (doc) {
+                document.getElementById("doctor").innerHTML += `<option>${doc.doctor.name}</option>`;
+            })
+        })
+}
+
 
 function changeInput(e) {
     document.getElementById("sev" + e.name).hidden = !e.checked
@@ -290,10 +408,10 @@ function sendSymptoms(symptoms) {
             dataJson.forEach(function (symptom) {
                 console.log(symptom);
                 document.getElementById("recommendations").innerHTML += `
-                    <label><b>${symptom.description}</b></label>`;
+                    <p><b>${symptom.description}:</b></p>`;
                 for (const recKey of symptom.recommendations) {
                     document.getElementById("recommendations").innerHTML += `
-                    <label><b>${recKey.description}</b></label>`;
+                    <p class="ss">${recKey.description}</p>`;
                 }
             });
         })
@@ -322,14 +440,14 @@ function sendSymToSev(symToSev) {
                 console.log(points);
                 if (points.severity.id > 2) {
                     document.getElementById("rec_specialists").innerHTML += `
-                    <label><b>${points.speciality.name}</b></label><label><b>${points.speciality.description}</b></label>`;
+                    <p><b>${points.speciality.name}:</b></p><p>${points.speciality.description}</p>`;
                 }
                 if (points.severity.id > max) {
                     max = points.severity.id;
                     sev_result = points.severity.treatType;
                 }
                 document.getElementById("treat_type").innerHTML += `
-                <label><b>${sev_result}</b></label>`;
+                <p>${sev_result}</p>`;
             });
         })
         .catch(err => {
@@ -360,6 +478,6 @@ function sendResults() {
 
 document.addEventListener("DOMContentLoaded", function () {
     load_districts();
-    load_symptoms();
     load_doctors();
+    load_symptoms();
 });

@@ -1,10 +1,12 @@
 package com.example.isdb.controller;
 
 import com.example.isdb.data.Appointment;
+import com.example.isdb.data.AppointmentParams;
 import com.example.isdb.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,5 +35,10 @@ public class AppointmentController {
     public List<Appointment> delete(@PathVariable long id) {
         appointmentRepository.deleteById(id);
         return appointmentRepository.findAll();
+    }
+
+    @PostMapping("/find")
+    public List<Appointment> find(@RequestBody AppointmentParams params) {
+        return appointmentRepository.findAllByWorkClinicAddressDistrictAndWorkClinicNumberAndWorkDoctorSpecialityNameAndWorkDoctorNameAndStatusStatus(params.getDistrict(), params.getClinic(), params.getSpecialist(), params.getDoctor(), "Свободно");
     }
 }
