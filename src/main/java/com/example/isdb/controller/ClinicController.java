@@ -34,6 +34,11 @@ public class ClinicController {
         return clinicRepository.findAllByAddressDistrict(district);
     }
 
+    @GetMapping("/findId/{number}")
+    public List<Clinic> find(@PathVariable Integer number) {
+        return clinicRepository.findByNumber(number);
+    }
+
     @GetMapping("/delete/{id}")
     public List<Clinic> delete(@PathVariable long id) {
         clinicRepository.deleteById(id);

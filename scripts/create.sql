@@ -102,8 +102,8 @@ CREATE TABLE appointments
                            status_id = 2 and patients_id IS NOT NULL and at_home IS NOT NULL)
 );
 
-CREATE TRIGGER tr_update_adr
+CREATE TRIGGER tr_update_addr
     AFTER UPDATE OF addresses_id
     ON patients
     FOR EACH ROW
-EXECUTE PROCEDURE update_adr();
+EXECUTE PROCEDURE update_addr();

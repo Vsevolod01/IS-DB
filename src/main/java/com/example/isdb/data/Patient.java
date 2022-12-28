@@ -14,7 +14,7 @@ public class Patient {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "addresses_id", nullable = true)
+    @JoinColumn(name = "addresses_id")
     Address address;
 
     @Column(name = "name", nullable = false)

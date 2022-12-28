@@ -80,7 +80,7 @@
             <input id="password" class="in" type="password" placeholder="Пароль" name="password" required>
         </label>
 
-        <button type="submit" class="btn btn-form" onclick="singUp()">Регистрация</button>
+        <button type="submit" class="btn btn-form" onclick="signUp()">Регистрация</button>
         <button type="submit" class="btn btn-form cancel" onclick="closeForm('form-singUp')">Закрыть</button>
 
         <p id="done" class="login-res">Вы успешно зарегистрировались!</p>
@@ -101,6 +101,17 @@
         <button type="submit" class="btn btn-form cancel" onclick="closeForm('myForm2')">Закрыть</button>
     </div>
 </div>
+
+<div class="form-popup" id="myForm3">
+    <div id="talonRes" class="form-container">
+        <h4>Доступные талоны:</h4>
+        <div id="talons">
+        </div>
+        <button id="registration" type="submit" class="btn btn-form" onclick="registration()">Записаться</button>
+        <button type="submit" class="btn btn-form cancel" onclick="closeForm('myForm3')">Отмена</button>
+    </div>
+</div>
+
 <div id="white"></div>
 <main id="main">
 
@@ -152,7 +163,7 @@
             </button>
         </div>
     </div>
-    <form id="form-1" class="forms">
+    <div id="form-1" class="forms">
         <h2 class="title-2">Записаться к врачу</h2>
         <div class="col">
             <label for="name">Как вас зовут?</label>
@@ -187,13 +198,13 @@
                 <label for="date">Желаемая дата записи</label>
                 <input id="date" type="date" class="in" placeholder="Желаемая дата приёма">
             </div>
-            <button class="btn res">Показать подходящие варианты</button>
+            <button onclick="show_ticket()" class="btn res">Показать подходящие варианты</button>
         </div>
-    </form>
+    </div>
     <div id="form-2" class="forms">
         <h2 class="title-2">Определить специалиста</h2>
         <div class="col" id="sym">
-            <label>Выберите симптомы и оцените тяжесть по шкале от 1 до 5</label>
+            <p>Выберите симптомы и оцените тяжесть по шкале от 1 до 5</p>
             <div class="over"></div>
         </div>
         <div class="col-bottom">
