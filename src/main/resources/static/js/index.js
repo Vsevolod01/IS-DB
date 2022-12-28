@@ -1,5 +1,5 @@
 let nodeClinics = document.getElementById(`dist`);
-nodeClinics.addEventListener('change', function() {
+nodeClinics.addEventListener('change', function () {
     let choice = this.options[this.selectedIndex].text;
     load_clinics(choice);
 })
@@ -153,8 +153,7 @@ function signUp() {
 
 function comeIn() {
     let user = {
-        login: document.getElementById("login").value,
-        password: document.getElementById("psw").value
+        login: document.getElementById("login").value, password: document.getElementById("psw").value
     };
     fetch("/user/check", {
         method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
@@ -170,8 +169,7 @@ function comeIn() {
         .then(async result => {
             if (result.length !== 0) {
                 await designBtn(result[0].login);
-            }
-            else {
+            } else {
                 document.getElementById("neOk").style.display = "block";
             }
         })
@@ -184,21 +182,21 @@ async function designBtn(name) {
     document.getElementById("myForm").style.display = "none";
     document.getElementById("white").style.display = "none";
 
-    document.querySelector(".container").innerHTML +=
-        `<p id="newText">Здравствуйте,<br>${name}</p><button id="btn-exit" class="btn" onclick="exit()">Выйти</button>`
+    document.querySelector(".container").innerHTML += `<p id="newText">Здравствуйте,<br>${name}</p>
+        <button id="btn-exit" class="btn" onclick="exit()">Выйти</button>`
 
     document.getElementById("btn-one").style.display = "none";
     document.getElementById("ok").style.display = "none";
+
+    document.getElementById("login").value = "";
+    document.getElementById("password").value = "";
 }
 
 function exit() {
     document.getElementById("newText").remove();
     document.getElementById("btn-exit").remove();
-    document.getElementById("btn-one").style.display="block";
+    document.getElementById("btn-one").style.display = "block";
 }
-
-
-
 
 function load_districts() {
     fetch("/clinic/all", {
@@ -248,7 +246,7 @@ function load_clinics(choice_region) {
                     });
 
                 })
-}
+        }
 
 function load_symptoms() {
     fetch("/symptom/all", {
@@ -264,7 +262,8 @@ function load_symptoms() {
         })
         .then(dataJson => {
             dataJson.forEach(function (symptom) {
-                document.getElementsByClassName("over")[0].innerHTML += `<div class="d"><div class="dd"><input type="checkbox" name="${symptom.id}" onchange="changeInput(this)"><p>${symptom.description}</p></div>
+                document.getElementsByClassName("over")[0].innerHTML += `<div class="d"><div class="dd">
+                    <input type="checkbox" name="${symptom.id}" onchange="changeInput(this)"><p>${symptom.description}</p></div>
                     <input id="sev${symptom.id}" type="number" class="in" min="1" max="5" placeholder="От 1 до 5" hidden>
                     </div>`
             });

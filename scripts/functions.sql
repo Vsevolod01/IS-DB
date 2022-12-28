@@ -12,18 +12,18 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION add_adr(patient_id BIGINT, adr CHARACTER VARYING, distr CHARACTER VARYING) RETURNS void
+CREATE OR REPLACE FUNCTION add_addr(patient_id BIGINT, addr CHARACTER VARYING, distr CHARACTER VARYING) RETURNS void
     LANGUAGE plpgsql
 AS
 $$
 DECLARE
     new_id INTEGER;
 BEGIN
-    IF adr NOT IN (SELECT address FROM addresses) THEN
+    IF addr NOT IN (SELECT address FROM addresses) THEN
         INSERT INTO addresses (address, district)
-        VALUES (adr, distr);
+        VALUES (addr, distr);
     END IF;
-    new_id := (SELECT addresses.id FROM addresses WHERE address = adr);
+    new_id := (SELECT addresses.id FROM addresses WHERE address = addr);
     UPDATE patients SET addresses_id = new_id WHERE patients.id = patient_id;
 END;
 $$;
