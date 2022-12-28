@@ -13,5 +13,5 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     List<Address> findAllByDistrict (String district);
 
     @Query(nativeQuery = true, value = "SELECT add_addr(:patient_id, :addr, :distr);")
-    void createAddress(@Param("patient_id") Long id, @Param("adr") String addr, @Param("distr") String distr);
+    void createAddress(@Param("patient_id") Long id, @Param("addr") String addr, @Param("distr") String distr);
 }

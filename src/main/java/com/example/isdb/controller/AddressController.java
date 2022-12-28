@@ -1,7 +1,6 @@
 package com.example.isdb.controller;
 
 import com.example.isdb.data.Address;
-import com.example.isdb.data.Clinic;
 import com.example.isdb.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

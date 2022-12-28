@@ -1,6 +1,5 @@
 package com.example.isdb.repository;
 
-import com.example.isdb.data.Doctor;
 import com.example.isdb.data.PK.WorkPK;
 import com.example.isdb.data.Work;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +12,4 @@ public interface WorkRepository extends JpaRepository<Work, WorkPK> {
     List<Work> findAllByClinicId(long id);
 
     List<Work> findAllByClinicNumberAndDoctorSpecialityName(Integer clinicNumber, String doctorSpecialityName);
-
-    //List<Doctor> findAllDoctorsByClinicId(long id);
 }
