@@ -1,7 +1,11 @@
 package com.example.isdb.controller;
 
 import com.example.isdb.data.Appointment;
+import com.example.isdb.data.Patient;
+import com.example.isdb.data.Status;
 import com.example.isdb.repository.AppointmentRepository;
+import com.example.isdb.repository.PatientRepository;
+import com.example.isdb.repository.StatusRepository;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +17,14 @@ import java.util.List;
 public class AppointmentController {
 
     private final AppointmentRepository appointmentRepository;
+    private final PatientRepository patientRepository;
+    private final StatusRepository statusRepository;
 
     @Autowired
-    public AppointmentController(AppointmentRepository appointmentRepository) {
+    public AppointmentController(AppointmentRepository appointmentRepository, PatientRepository patientRepository, StatusRepository statusRepository) {
         this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+        this.statusRepository = statusRepository;
     }
 
     @GetMapping("/all")
@@ -43,5 +51,19 @@ public class AppointmentController {
         String specialist = params.get("specialist").asText();
         String doctor = params.get("doctor").asText();
         return appointmentRepository.findAllByWorkClinicAddressDistrictAndWorkClinicNumberAndWorkDoctorSpecialityNameAndWorkDoctorNameAndStatusStatus(district, clinic, specialist, doctor, "Свободно");
+    }
+
+    @PostMapping("/appoint")
+    public void appoint(@RequestBody ObjectNode params) {
+        boolean atHome = params.get("at_home").asBoolean();
+        long appointmentId = params.get("appointmentId").asLong();
+        long patientId = params.get("patient").asLong();
+        Patient patient = patientRepository.findById(patientId).get();
+        Appointment appointment = appointmentRepository.findById(appointmentId).get();
+        Status status = statusRepository.findById(2L).get();
+        appointment.setAtHome(atHome);
+        appointment.setPatient(patient);
+        appointment.setStatus(status);
+        appointmentRepository.save(appointment);
     }
 }

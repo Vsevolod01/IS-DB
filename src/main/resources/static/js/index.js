@@ -1,3 +1,4 @@
+let patientId = null;
 let nodeClinics = document.getElementById(`dist`);
 nodeClinics.addEventListener('change', function () {
     let choice = this.options[this.selectedIndex].text;
@@ -17,14 +18,79 @@ nodeDoctor.addEventListener('change', function() {
 })
 
 function registration() {
-    let name = document.getElementById(`name`);
-    let birthday = document.getElementById(`db`);
-    let phone = document.getElementById(`phone`);
-    let address = document.getElementById(`addr`);
-
+    let patient = patientId
+    if (patientId == null) {
+        let name = document.getElementById(`name`).value;
+        let phone = document.getElementById(`phone`).value;
+        let name_phone = {
+            name: name, phone: phone
+        }
+        fetch("/patient/check", {
+            method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(name_phone)
+        })
+            .then(resp => {
+                if (resp.status === 200) {
+                    return resp.json()
+                } else {
+                    console.log("Status: " + resp.status)
+                    return Promise.reject("server")
+                }
+            })
+            .then(result => {
+                if (result.length !== 0) {
+                    patient = result[0].id
+                } else {
+                    let birthdate = document.getElementById(`db`);
+                    patient = { name: name, phone: phone, birthdate: birthdate }
+                    fetch("/patient/create", {
+                        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(patient)
+                    })
+                        .then(resp => {
+                            if (resp.status === 200) {
+                                return resp.json()
+                            } else {
+                                console.log("Status: " + resp.status)
+                                return Promise.reject("server")
+                            }
+                        })
+                        .then(pat => {
+                            patient = pat.id
+                            let address = {
+                                id: pat.id,
+                                address: document.getElementById("addr").value,
+                                district: document.getElementById("distr").value,
+                                cnt: 0
+                            }
+                            fetch("/address/create", {
+                                method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(address)
+                            })
+                                .then(resp => {
+                                    if (resp.status === 200) {
+                                        return pat
+                                    } else {
+                                        console.log("Status: " + resp.status)
+                                        return Promise.reject("server")
+                                    }
+                                });
+                        })
+                }
+            })
+    }
+    let at_home = document.getElementById("at_home").value === 'На дому'
     let checked = Number(document.querySelector('#talons input[name="talon"]:checked')
         .nextElementSibling.querySelector(`.talonId`).innerHTML);
-
+    let params = { patient: patient, at_home: at_home, appointmentId: checked }
+    fetch("/appointment/appoint", {
+        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(params)
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
     //Передаём параметры пациента в базу, изменяем статус талона
 }
 
@@ -170,6 +236,7 @@ function comeIn() {
         .then(async result => {
             if (result.length !== 0) {
                 await designBtn(result[0].login);
+                patientId = result[0].patient.id
             } else {
                 document.getElementById("neOk").style.display = "block";
             }
@@ -196,6 +263,7 @@ async function designBtn(name) {
 }
 
 function exit() {
+    patientId = null
     document.getElementById("newText").remove();
     document.getElementById("btn-exit").remove();
     document.getElementById("btn-one").style.display = "block";
@@ -204,14 +272,19 @@ function exit() {
         `<div class="col" id="form-appoint">
         <label for="name">Как вас зовут?</label>
         <input id="name" type="text" class="in" placeholder="ФИО">
-            <label for="db">Дата рождения</label>
-            <input id="db" type="date" class="in" placeholder="Дата рождения">
-                <label for="phone">Ваш телефон</label>
-                <input id="phone" type="tel" class="in" placeholder="+7 999 999 99 99">
-                    <label for="addr">Адрес проживания</label>
-                    <input id="addr" type="text" class="in" placeholder="Адрес">
-                        <label for="distr">Район проживания</label>
-                        <input id="distr" type="text" class="in" placeholder="Район">
+        <label for="db">Дата рождения</label>
+        <input id="db" type="date" class="in" placeholder="Дата рождения">
+        <label for="phone">Ваш телефон</label>
+        <input id="phone" type="tel" class="in" placeholder="8 999 999 99 99">
+        <label for="addr">Адрес проживания</label>
+        <input id="addr" type="text" class="in" placeholder="Адрес">
+        <label for="distr">Район проживания</label>
+        <input id="distr" type="text" class="in" placeholder="Район">
+        <label for="at_home">Способ лечения</label>
+        <select id="at_home" name="at_home" class="in">
+            <option selected>На дому</option>
+            <option>Амбулаторно</option>
+        </select>
     </div>`)
 
     document.getElementById("form-appoint").style.display = ''

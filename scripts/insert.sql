@@ -21,14 +21,21 @@ VALUES ('Улица Белы Куна, дом 7, квартира 14', 'Фрун
 INSERT INTO clinics (addresses_id, number)
 VALUES (5, 120),
        (6, 75);
-INSERT INTO patients (addresses_id, name, phone, BIRTHDATE)
-VALUES (1, 'Жарков Юрий Игоревич', '89047395831', '1983-05-12'),
-       (1, 'Жаркова Анна Ивановна', '89238649238', '1982-12-31'),
-       (2, 'Керенский Ярослав Витальевич', '89740295832', '1923-01-10'),
-       (3, 'Андреева Ольга Васильевна', '89632059572', '1940-08-18'),
-       (4, 'Голубев Арсений Игнатович', '88129285478', '1957-03-22'),
-       (4, 'Голубева Ангелина Романовна', '88129284578', '1961-11-07'),
-       (3, 'Дорощук Даниил Павлович', '88127938693', '1996-10-01');
+INSERT INTO patients (name, phone, birthdate)
+VALUES ('Жарков Юрий Игоревич', '89047395831', '1983-05-12'),
+       ('Жаркова Анна Ивановна', '89238649238', '1982-12-31'),
+       ('Керенский Ярослав Витальевич', '89740295832', '1923-01-10'),
+       ('Андреева Ольга Васильевна', '89632059572', '1940-08-18'),
+       ('Голубев Арсений Игнатович', '88129285478', '1957-03-22'),
+       ('Голубева Ангелина Романовна', '88129284578', '1961-11-07'),
+       ('Дорощук Даниил Павлович', '88127938693', '1996-10-01');
+UPDATE patients SET addresses_id = 1 WHERE id=1;
+UPDATE patients SET addresses_id = 1 WHERE id=2;
+UPDATE patients SET addresses_id = 2 WHERE id=3;
+UPDATE patients SET addresses_id = 3 WHERE id=4;
+UPDATE patients SET addresses_id = 4 WHERE id=5;
+UPDATE patients SET addresses_id = 4 WHERE id=6;
+UPDATE patients SET addresses_id = 3 WHERE id=7;
 INSERT INTO users (patients_id, login, password)
 VALUES (1, 'zharyi', 'z589X|`([^%@'),
        (2, 'nyura311282', 'marilynmonroe'),
