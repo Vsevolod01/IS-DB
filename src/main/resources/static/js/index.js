@@ -192,13 +192,28 @@ async function designBtn(name) {
     document.getElementById("login").value = "";
     document.getElementById("password").value = "";
 
-    document.getElementById("form-appoint").style.display = 'none'
+    document.getElementById("form-appoint").remove();
 }
 
 function exit() {
     document.getElementById("newText").remove();
     document.getElementById("btn-exit").remove();
     document.getElementById("btn-one").style.display = "block";
+
+    document.getElementsByClassName("title-2")[1].insertAdjacentHTML("afterend",
+        `<div class="col" id="form-appoint">
+        <label for="name">Как вас зовут?</label>
+        <input id="name" type="text" class="in" placeholder="ФИО">
+            <label for="db">Дата рождения</label>
+            <input id="db" type="date" class="in" placeholder="Дата рождения">
+                <label for="phone">Ваш телефон</label>
+                <input id="phone" type="tel" class="in" placeholder="+7 999 999 99 99">
+                    <label for="addr">Адрес проживания</label>
+                    <input id="addr" type="text" class="in" placeholder="Адрес">
+                        <label for="distr">Район проживания</label>
+                        <input id="distr" type="text" class="in" placeholder="Район">
+    </div>`)
+
     document.getElementById("form-appoint").style.display = ''
 }
 
