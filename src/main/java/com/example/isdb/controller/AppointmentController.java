@@ -59,8 +59,8 @@ public class AppointmentController {
         long appointmentId = params.get("appointmentId").asLong();
         long patientId = params.get("patient").asLong();
         Patient patient = patientRepository.findById(patientId).get();
-        Appointment appointment = appointmentRepository.findById(appointmentId).get();
-        Status status = statusRepository.findById(2L).get();
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        Status status = statusRepository.findById(2L);
         appointment.setAtHome(atHome);
         appointment.setPatient(patient);
         appointment.setStatus(status);

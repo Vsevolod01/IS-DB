@@ -264,26 +264,27 @@ function signUp() {
                         console.log("Status: " + resp.status)
                         return Promise.reject("server")
                     }
-                });
-        })
-        .then(pat => {
-            let user = {
-                id: pat.id,
-                login: document.getElementById("username").value,
-                password: document.getElementById("password").value
-            };
-            fetch("/user/create", {
-                method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
+                })
+                .then(pat => {
+                let user = {
+                    patient: pat,
+                    login: document.getElementById("username").value,
+                    password: document.getElementById("password").value
+                };
+                fetch("/user/create", {
+                    method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
+                })
+                    .then(resp => {
+                        if (resp.status === 200) {
+                            return resp.json()
+                        } else {
+                            console.log("Status: " + resp.status)
+                            return Promise.reject("server")
+                        }
+                    });
             })
-                .then(resp => {
-                    if (resp.status === 200) {
-                        return resp.json()
-                    } else {
-                        console.log("Status: " + resp.status)
-                        return Promise.reject("server")
-                    }
-                });
         })
+
 }
 
 function comeIn() {

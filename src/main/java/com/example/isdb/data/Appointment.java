@@ -90,4 +90,5 @@ public class Appointment {
     public void setAtHome(final Boolean atHome) {
         this.atHome = atHome;
     }
+
 }
