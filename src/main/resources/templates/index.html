@@ -15,6 +15,7 @@
             <a href="/"><img src="/assets/logo.png" alt="logo" class="logo"></a>
             <p class="title"><a href="/">Мой доктор</a></p>
             <button id="btn-one" class="btn" onclick="openForm('myForm')">Личный кабинет</button>
+            <button id="btn-app" class="btn" onclick="openForm('myForm4')">Мои записи</button>
         </div>
     </div>
 </header>
@@ -109,6 +110,14 @@
         </div>
         <button id="registration" type="submit" class="btn btn-form" onclick="registration()">Записаться</button>
         <button type="submit" class="btn btn-form cancel" onclick="closeForm('myForm3')">Отмена</button>
+    </div>
+</div>
+<div class="form-popup" id="myForm4">
+    <div id="appointmentRes" class="form-container">
+        <h4>Мои записи:</h4>
+        <div id="appointments">
+        </div>
+        <button type="submit" class="btn btn-form cancel" onclick="closeForm('myForm4')">Закрыть</button>
     </div>
 </div>
 

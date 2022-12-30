@@ -66,4 +66,20 @@ public class AppointmentController {
         appointment.setStatus(status);
         appointmentRepository.save(appointment);
     }
+
+    @GetMapping({"/findBy/{id}"})
+    public List<Appointment> find(@PathVariable long id) {
+        return this.appointmentRepository.findAllByPatientId(id);
+    }
+
+    @PostMapping({"/free/{id}"})
+    public List<Appointment> free(@PathVariable long id) {
+        Appointment r = this.appointmentRepository.findById(id);
+        Status status = this.statusRepository.findById(1L);
+        r.setPatientNull();
+        r.setStatus(status);
+        r.setAtHomeNull();
+        this.appointmentRepository.save(r);
+        return this.appointmentRepository.findAll();
+    }
 }

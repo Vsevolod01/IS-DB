@@ -1,3 +1,4 @@
+let current_user = null;
 let patientId = null;
 let nodeClinics = document.getElementById(`dist`);
 nodeClinics.addEventListener('change', function () {
@@ -16,6 +17,73 @@ nodeDoctor.addEventListener('change', function() {
     let choice = this.options[this.selectedIndex].text;
     load_doctors_new(choice);
 })
+
+function myAppointments() {
+    fetch("/appointment/findBy/" + current_user.patient.id, {
+        method: "get", headers: {"Content-Type": "application/json"}
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .then(apps => {
+            if (apps.length === 0) {
+                drawAppNull();
+            }
+            else {
+                drawAppointments(apps);
+            }
+        })
+
+}
+
+function drawAppointments(appointments) {
+    document.getElementById(`appointments`).innerHTML = ``;
+    appointments.forEach(function (appointment) {
+        document.getElementById(`appointments`).innerHTML +=
+            `<div class="appointment">
+                <div class="app">
+                    <p>Талон №</p>
+                    <p class="talonId">${appointment.id}</p>
+                    <p>${appointment.work.doctor.speciality.name}</p>
+                    <p>${appointment.work.doctor.name}</p>
+                    <p>${appointment.work.clinic.address.address}</p>
+                    <p>${appointment.date}</p>
+                </div>
+                <button class="delApp" id="delApp${appointment.id}">Отменить</button>
+            </div>`;
+    })
+    let delAppNode = document.querySelectorAll(`.delApp`);
+    delAppNode.forEach((button) => {
+        button.addEventListener(`click`, cancelApp)
+    })
+}
+
+function cancelApp(e) {
+    e = e.target.id;
+    document.getElementById(e).parentElement.remove();
+    e = Number(e.replace('delApp', ''));
+    fetch("/appointment/free/" + e, {
+        method: "post", headers: {"Content-Type": "application/json"}
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+}
+
+function drawAppNull() {
+    document.getElementById(`appointments`).innerHTML = ``;
+    document.querySelector(`#talonRes h4`).innerHTML = `Талонов не найдено :(`;
+}
 
 function registration() {
     let patient = patientId
@@ -235,8 +303,10 @@ function comeIn() {
         })
         .then(async result => {
             if (result.length !== 0) {
+                current_user = result[0];
                 await designBtn(result[0].login);
-                patientId = result[0].patient.id
+                patientId = result[0].patient.id;
+                myAppointments();
             } else {
                 document.getElementById("neOk").style.display = "block";
             }
@@ -260,13 +330,16 @@ async function designBtn(name) {
     document.getElementById("password").value = "";
 
     document.getElementById("form-appoint").remove();
+    document.getElementById("btn-app").style.display = "block";
 }
 
 function exit() {
-    patientId = null
+    patientId = null;
+    current_user = null;
     document.getElementById("newText").remove();
     document.getElementById("btn-exit").remove();
     document.getElementById("btn-one").style.display = "block";
+    document.getElementById("btn-app").style.display="none";
 
     document.getElementsByClassName("title-2")[1].insertAdjacentHTML("afterend",
         `<div class="col" id="form-appoint">

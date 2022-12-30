@@ -267,8 +267,10 @@ footer p {
 }
 
 #btn-exit {
-    width: 110px;
+    width: 120px;
     background-color: #FF0000;
+    font-size: 18px;
+    height: 40px;
 }
 
 /* Добавить стили для контейнера формы */
@@ -302,7 +304,7 @@ footer p {
     background-color: orangered;
 }
 
-#form-signUp {
+#form-singUp {
     margin-top: -50px;
 }
 
@@ -322,7 +324,7 @@ footer p {
     background-color: white;
 }
 
-#myForm3 .form-container {
+#myForm3 form-container {
     max-height: 519px;
     overflow: auto;
 }
@@ -376,4 +378,35 @@ footer p {
 .ss {
     margin: 0;
     font-size: 18px;
+}
+
+#btn-app {
+    display: none;
+    font-size: 18px;
+    width: 120px;
+    height: 40px;
+}
+
+.appointment {
+    border-radius: 20px;
+    border: 1px solid blue;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.app p{
+    font-size: 18px;
+    margin: 0 0 5px;
+}
+
+.delApp {
+    background-color: red;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.delApp:hover {
+    cursor: pointer;
 }
