@@ -302,7 +302,7 @@ footer p {
     background-color: orangered;
 }
 
-#form-singUp {
+#form-signUp {
     margin-top: -50px;
 }
 
@@ -322,7 +322,7 @@ footer p {
     background-color: white;
 }
 
-#myForm3 form-container {
+#myForm3 .form-container {
     max-height: 519px;
     overflow: auto;
 }

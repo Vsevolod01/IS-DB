@@ -20,7 +20,7 @@
 </header>
 <div class="form-popup" id="myForm">
     <div class="form-container" id="form-hidden-1">
-        <h4><a href="#" onclick="openForm('myForm')">Войти</a>/<a href="#" onclick="openForm('form-singUp')">
+        <h4><a href="#" onclick="openForm('myForm')">Войти</a>/<a href="#" onclick="openForm('form-signUp')">
             Зарегистрироваться</a></h4>
 
         <label for="login"><b>Логин</b></label>
@@ -40,9 +40,9 @@
         <p id="neOk" class="login-res">Ошибка входа</p>
     </div>
 </div>
-<div class="form-popup" id="form-singUp">
+<div class="form-popup" id="form-signUp">
     <div class="form-container" id="form-hidden-2">
-        <h4><a href="#" onclick="openForm('myForm')">Войти</a>/<a href="#" onclick="openForm('form-singUp')">
+        <h4><a href="#" onclick="openForm('myForm')">Войти</a>/<a href="#" onclick="openForm('form-signUp')">
             Зарегистрироваться</a></h4>
 
         <label for="fio"><b>ФИО</b></label>
@@ -81,7 +81,7 @@
         </label>
 
         <button type="submit" class="btn btn-form" onclick="signUp()">Регистрация</button>
-        <button type="submit" class="btn btn-form cancel" onclick="closeForm('form-singUp')">Закрыть</button>
+        <button type="submit" class="btn btn-form cancel" onclick="closeForm('form-signUp')">Закрыть</button>
 
         <p id="done" class="login-res">Вы успешно зарегистрировались!</p>
         <p id="neDone" class="login-res">Ошибка регистрации</p>
@@ -172,8 +172,10 @@
             <input id="db" type="date" class="in" placeholder="Дата рождения">
             <label for="phone">Ваш телефон</label>
             <input id="phone" type="tel" class="in" placeholder="+7 999 999 99 99">
-            <label for="adr">Адрес проживания</label>
-            <input id="adr" type="text" class="in" placeholder="Адрес">
+            <label for="addr">Адрес проживания</label>
+            <input id="addr" type="text" class="in" placeholder="Адрес">
+            <label for="distr">Район проживания</label>
+            <input id="distr" type="text" class="in" placeholder="Район">
         </div>
         <div class="col">
             <label for="dist">Район поликлиники</label>

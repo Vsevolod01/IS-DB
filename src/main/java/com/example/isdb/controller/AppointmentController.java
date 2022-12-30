@@ -1,12 +1,11 @@
 package com.example.isdb.controller;
 
 import com.example.isdb.data.Appointment;
-import com.example.isdb.data.AppointmentParams;
 import com.example.isdb.repository.AppointmentRepository;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -38,7 +37,11 @@ public class AppointmentController {
     }
 
     @PostMapping("/find")
-    public List<Appointment> find(@RequestBody AppointmentParams params) {
-        return appointmentRepository.findAllByWorkClinicAddressDistrictAndWorkClinicNumberAndWorkDoctorSpecialityNameAndWorkDoctorNameAndStatusStatus(params.getDistrict(), params.getClinic(), params.getSpecialist(), params.getDoctor(), "Свободно");
+    public List<Appointment> find(@RequestBody ObjectNode params) {
+        String district = params.get("district").asText();
+        long clinic = params.get("clinic").asLong();
+        String specialist = params.get("specialist").asText();
+        String doctor = params.get("doctor").asText();
+        return appointmentRepository.findAllByWorkClinicAddressDistrictAndWorkClinicNumberAndWorkDoctorSpecialityNameAndWorkDoctorNameAndStatusStatus(district, clinic, specialist, doctor, "Свободно");
     }
 }

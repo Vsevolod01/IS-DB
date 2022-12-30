@@ -20,9 +20,10 @@ function registration() {
     let name = document.getElementById(`name`);
     let birthday = document.getElementById(`db`);
     let phone = document.getElementById(`phone`);
-    let address = document.getElementById(`adr`);
+    let address = document.getElementById(`addr`);
 
-    let checked = Number(document.querySelector('#talons input[name="talon"]:checked').nextElementSibling.querySelector(`.talonId`).innerHTML);
+    let checked = Number(document.querySelector('#talons input[name="talon"]:checked')
+        .nextElementSibling.querySelector(`.talonId`).innerHTML);
 
     //Передаём параметры пациента в базу, изменяем статус талона
 }
@@ -374,9 +375,9 @@ function openForm(formName) {
     document.getElementById("white").style.display = "block";
 
     if (formName === 'myForm') {
-        document.getElementById('form-singUp').style.display = "none";
+        document.getElementById('form-signUp').style.display = "none";
     }
-    if (formName === 'form-singUp') {
+    if (formName === 'form-signUp') {
         document.getElementById('myForm').style.display = "none";
     }
 }
@@ -461,16 +462,17 @@ function sendResults() {
         alert("Выберите хотя бы один атрибут!");
         return;
     }
-    sendSymptoms(symptoms);
     let symToSev = symptoms.map(e => ({
         "symptomId": e, "severityId": Number(document.getElementById("sev" + e).value)
     }));
     for (const ss of symToSev) {
         if (ss.severityId < 1 || ss.severityId > 5) {
             alert("Введите целое число от 1 до 5!");
+            closeForm("myForm2")
             return;
         }
     }
+    sendSymptoms(symptoms);
     sendSymToSev(symToSev);
     openForm("myForm2")
 }
