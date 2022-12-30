@@ -191,12 +191,15 @@ async function designBtn(name) {
 
     document.getElementById("login").value = "";
     document.getElementById("password").value = "";
+
+    document.getElementById("form-appoint").style.display = 'none'
 }
 
 function exit() {
     document.getElementById("newText").remove();
     document.getElementById("btn-exit").remove();
     document.getElementById("btn-one").style.display = "block";
+    document.getElementById("form-appoint").style.display = ''
 }
 
 function load_districts() {

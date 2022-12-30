@@ -77,7 +77,8 @@ CREATE TABLE patients
     addresses_id INTEGER REFERENCES addresses ON DELETE RESTRICT,
     name         VARCHAR(64) NOT NULL,
     phone        BIGINT,
-    birthdate    DATE        NOT NULL
+    birthdate    DATE        NOT NULL,
+    CONSTRAINT uniq_pat UNIQUE (name, phone)
 );
 CREATE TABLE users
 (
