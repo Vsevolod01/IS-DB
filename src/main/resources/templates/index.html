@@ -109,7 +109,9 @@
         <div id="talons">
         </div>
         <button id="registration" type="submit" class="btn btn-form" onclick="registration()">Записаться</button>
-        <button type="submit" class="btn btn-form cancel" onclick="closeForm('myForm3')">Отмена</button>
+        <button id="registration-close" type="submit" class="btn btn-form cancel" onclick="closeForm('myForm3')">Отмена</button>
+        <p id="appOk" class="login-res">Успешно!</p>
+        <p id="appFail" class="login-res">Одна ошибка - и ты ошибся...</p>
     </div>
 </div>
 <div class="form-popup" id="myForm4">
@@ -210,10 +212,10 @@
             </select>
         </div>
         <div class="col-bottom">
-            <div>
-                <label for="date">Желаемая дата записи</label>
-                <input id="date" type="date" class="in" placeholder="Желаемая дата приёма">
-            </div>
+<!--            <div>-->
+<!--                <label for="date">Желаемая дата записи</label>-->
+<!--                <input id="date" type="date" class="in" placeholder="Желаемая дата приёма">-->
+<!--            </div>-->
             <button onclick="show_ticket()" class="btn res">Показать подходящие варианты</button>
         </div>
     </div>

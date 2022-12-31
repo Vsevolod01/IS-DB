@@ -29,13 +29,27 @@ VALUES ('Жарков Юрий Игоревич', '89047395831', '1983-05-12'),
        ('Голубев Арсений Игнатович', '88129285478', '1957-03-22'),
        ('Голубева Ангелина Романовна', '88129284578', '1961-11-07'),
        ('Дорощук Даниил Павлович', '88127938693', '1996-10-01');
-UPDATE patients SET addresses_id = 1 WHERE id=1;
-UPDATE patients SET addresses_id = 1 WHERE id=2;
-UPDATE patients SET addresses_id = 2 WHERE id=3;
-UPDATE patients SET addresses_id = 3 WHERE id=4;
-UPDATE patients SET addresses_id = 4 WHERE id=5;
-UPDATE patients SET addresses_id = 4 WHERE id=6;
-UPDATE patients SET addresses_id = 3 WHERE id=7;
+UPDATE patients
+SET addresses_id = 1
+WHERE id = 1;
+UPDATE patients
+SET addresses_id = 1
+WHERE id = 2;
+UPDATE patients
+SET addresses_id = 2
+WHERE id = 3;
+UPDATE patients
+SET addresses_id = 3
+WHERE id = 4;
+UPDATE patients
+SET addresses_id = 4
+WHERE id = 5;
+UPDATE patients
+SET addresses_id = 4
+WHERE id = 6;
+UPDATE patients
+SET addresses_id = 3
+WHERE id = 7;
 INSERT INTO users (patients_id, login, password)
 VALUES (1, 'zharyi', 'z589X|`([^%@'),
        (2, 'nyura311282', 'marilynmonroe'),

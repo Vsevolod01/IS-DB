@@ -54,17 +54,18 @@ public class AppointmentController {
     }
 
     @PostMapping("/appoint")
-    public void appoint(@RequestBody ObjectNode params) {
+    public List<Appointment> appoint(@RequestBody ObjectNode params) {
         boolean atHome = params.get("at_home").asBoolean();
         long appointmentId = params.get("appointmentId").asLong();
         long patientId = params.get("patient").asLong();
-        Patient patient = patientRepository.findById(patientId).get();
+        Patient patient = patientRepository.findById(patientId);
         Appointment appointment = appointmentRepository.findById(appointmentId);
         Status status = statusRepository.findById(2L);
         appointment.setAtHome(atHome);
         appointment.setPatient(patient);
         appointment.setStatus(status);
         appointmentRepository.save(appointment);
+        return appointmentRepository.findAllByPatientId(patientId);
     }
 
     @GetMapping({"/findBy/{id}"})
@@ -76,9 +77,9 @@ public class AppointmentController {
     public List<Appointment> free(@PathVariable long id) {
         Appointment r = this.appointmentRepository.findById(id);
         Status status = this.statusRepository.findById(1L);
-        r.setPatientNull();
+        r.setPatient(null);
         r.setStatus(status);
-        r.setAtHomeNull();
+        r.setAtHome(null);
         this.appointmentRepository.save(r);
         return this.appointmentRepository.findAll();
     }

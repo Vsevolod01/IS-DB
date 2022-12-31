@@ -26,7 +26,7 @@ public class UserController {
     @PostMapping("/create")
     public List<User> create(@RequestBody User user) {
         userRepository.save(user);
-        return userRepository.findAll();
+        return userRepository.findByLoginAndPassword(user.getLogin(), user.getPassword());
     }
 
     @GetMapping("/delete/{id}")

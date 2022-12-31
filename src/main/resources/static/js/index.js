@@ -1,4 +1,3 @@
-let current_user = null;
 let patientId = null;
 let nodeClinics = document.getElementById(`dist`);
 nodeClinics.addEventListener('change', function () {
@@ -7,19 +6,19 @@ nodeClinics.addEventListener('change', function () {
 })
 
 let nodeSpecialist = document.getElementById(`hospital`);
-nodeSpecialist.addEventListener('change', function() {
+nodeSpecialist.addEventListener('change', function () {
     let choice = this.options[this.selectedIndex].text;
     load_specialities(Number(choice));
 })
 
 let nodeDoctor = document.getElementById(`specialist`);
-nodeDoctor.addEventListener('change', function() {
+nodeDoctor.addEventListener('change', function () {
     let choice = this.options[this.selectedIndex].text;
     load_doctors_new(choice);
 })
 
 function myAppointments() {
-    fetch("/appointment/findBy/" + current_user.patient.id, {
+    fetch("/appointment/findBy/" + patientId, {
         method: "get", headers: {"Content-Type": "application/json"}
     })
         .then(resp => {
@@ -33,8 +32,7 @@ function myAppointments() {
         .then(apps => {
             if (apps.length === 0) {
                 drawAppNull();
-            }
-            else {
+            } else {
                 drawAppointments(apps);
             }
         })
@@ -44,8 +42,7 @@ function myAppointments() {
 function drawAppointments(appointments) {
     document.getElementById(`appointments`).innerHTML = ``;
     appointments.forEach(function (appointment) {
-        document.getElementById(`appointments`).innerHTML +=
-            `<div class="appointment">
+        document.getElementById(`appointments`).innerHTML += `<div class="appointment">
                 <div class="app">
                     <p>Талон №</p>
                     <p class="talonId">${appointment.id}</p>
@@ -108,8 +105,8 @@ function registration() {
                 if (result.length !== 0) {
                     patient = result[0].id
                 } else {
-                    let birthdate = document.getElementById(`db`);
-                    patient = { name: name, phone: phone, birthdate: birthdate }
+                    let birthdate = document.getElementById(`db`).value;
+                    patient = {name: name, phone: phone, birthdate: birthdate}
                     fetch("/patient/create", {
                         method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(patient)
                     })
@@ -130,7 +127,9 @@ function registration() {
                                 cnt: 0
                             }
                             fetch("/address/create", {
-                                method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(address)
+                                method: "post",
+                                headers: {"Content-Type": "application/json"},
+                                body: JSON.stringify(address)
                             })
                                 .then(resp => {
                                     if (resp.status === 200) {
@@ -139,27 +138,84 @@ function registration() {
                                         console.log("Status: " + resp.status)
                                         return Promise.reject("server")
                                     }
+                                })
+                        })
+                        .then(() => {
+                            let at_home = document.getElementById("at_home").value === 'На дому'
+                            let checked = Number(document.querySelector('#talons input[name="talon"]:checked')
+                                .nextElementSibling.querySelector(`.talonId`).innerHTML);
+                            let params = {patient: patient, at_home: at_home, appointmentId: checked}
+                            fetch("/appointment/appoint", {
+                                method: "post",
+                                headers: {"Content-Type": "application/json"},
+                                body: JSON.stringify(params)
+                            })
+                                .then(resp => {
+                                    if (resp.status === 200) {
+                                        return resp.json()
+                                    } else {
+                                        console.log("Status: " + resp.status)
+                                        return Promise.reject("server")
+                                    }
+                                })
+                                .then(async result => {
+                                    if (result.length !== 0) {
+                                        await appointBtn();
+                                    } else {
+                                        document.getElementById("appFail").style.display = "block";
+                                    }
                                 });
                         })
                 }
             })
-    }
-    let at_home = document.getElementById("at_home").value === 'На дому'
-    let checked = Number(document.querySelector('#talons input[name="talon"]:checked')
-        .nextElementSibling.querySelector(`.talonId`).innerHTML);
-    let params = { patient: patient, at_home: at_home, appointmentId: checked }
-    fetch("/appointment/appoint", {
-        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(params)
-    })
-        .then(resp => {
-            if (resp.status === 200) {
-                return resp.json()
-            } else {
-                console.log("Status: " + resp.status)
-                return Promise.reject("server")
-            }
+    } else {
+        let at_home = document.getElementById("at_home").value === 'На дому'
+        let checked = Number(document.querySelector('#talons input[name="talon"]:checked')
+            .nextElementSibling.querySelector(`.talonId`).innerHTML);
+        let params = {patient: patient, at_home: at_home, appointmentId: checked}
+        fetch("/appointment/appoint", {
+            method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(params)
         })
+            .then(resp => {
+                if (resp.status === 200) {
+                    return resp.json()
+                } else {
+                    console.log("Status: " + resp.status)
+                    return Promise.reject("server")
+                }
+            })
+            .then(async result => {
+                if (result.length !== 0) {
+                    await appointBtn();
+                    myAppointments();
+                } else {
+                    document.getElementById("appFail").style.display = "block";
+                }
+            });
+    }
     //Передаём параметры пациента в базу, изменяем статус талона
+}
+
+async function appointBtn() {
+    document.getElementById("appFail").style.display = "none";
+    document.getElementById("appOk").style.display = "block";
+    await new Promise(r => setTimeout(r, 1000));
+    document.getElementById("myForm3").style.display = "none";
+    if (patientId == null) {
+        document.getElementById("name").value = "";
+        document.getElementById("db").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("addr").value = "";
+        document.getElementById("distr").value = "";
+    }
+    document.getElementById("dist").setAttribute("value", "-");
+    document.getElementById("hospital").setAttribute("value", "-");
+    document.getElementById("specialist").setAttribute("value", "-");
+    document.getElementById("doctor").setAttribute("value", "-");
+    document.getElementById("at_home").setAttribute("value", "На дому");
+    document.getElementById("date").setAttribute("value", "");
+    document.getElementById("white").style.display = "none";
+    document.getElementById("appOk").style.display = "none";
 }
 
 function show_ticket() {
@@ -174,13 +230,10 @@ function show_ticket() {
     let doctorNode = document.getElementById(`doctor`);
     let doctor = doctorNode.options[doctorNode.selectedIndex].text;
 
-    let date = document.getElementById(`date`).value;
+    // let date = document.getElementById(`date`).value;
 
     let params = {
-        district: district,
-        clinic: clinicNum,
-        specialist: specialist,
-        doctor: doctor
+        district: district, clinic: clinicNum, specialist: specialist, doctor: doctor
     };
 
     fetch("/appointment/find", {
@@ -197,8 +250,7 @@ function show_ticket() {
         .then(tickets => {
             if (tickets.length === 0) {
                 drawTalonNull();
-            }
-            else {
+            } else {
                 document.getElementById(`talons`).innerHTML = ``;
                 tickets.forEach(function (ticket) {
                     drawTalon(ticket.id, ticket.work.doctor.speciality.name, ticket.work.doctor.name, ticket.work.clinic.address.address, ticket.date);
@@ -211,12 +263,11 @@ function show_ticket() {
 function drawTalonNull() {
     document.getElementById(`talons`).innerHTML = ``;
     document.querySelector(`#talonRes h4`).innerHTML = `Талонов не найдено :(`;
-    document.getElementById(`registration`).disabled = true;
+    document.getElementById(`registration`).hidden = true;
 }
 
 function drawTalon(id, speciality, doctor, address, date) {
-    document.getElementById(`talons`).innerHTML +=
-        `<div class="talon">
+    document.getElementById(`talons`).innerHTML += `<div class="talon">
             <input type="radio" class="talonItem" name="talon">
             <div>
                 <p>Талон №</p>
@@ -230,7 +281,7 @@ function drawTalon(id, speciality, doctor, address, date) {
 }
 
 function signUp() {
-        let patient = {
+    let patient = {
         name: document.getElementById("fio").value,
         phone: document.getElementById("tel").value,
         birthdate: document.getElementById("bd").value
@@ -266,23 +317,32 @@ function signUp() {
                     }
                 })
                 .then(pat => {
-                let user = {
-                    patient: pat,
-                    login: document.getElementById("username").value,
-                    password: document.getElementById("password").value
-                };
-                fetch("/user/create", {
-                    method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
+                    let user = {
+                        patient: pat,
+                        login: document.getElementById("username").value,
+                        password: document.getElementById("password").value
+                    };
+                    fetch("/user/create", {
+                        method: "post", headers: {"Content-Type": "application/json"}, body: JSON.stringify(user)
+                    })
+                        .then(resp => {
+                            if (resp.status === 200) {
+                                return resp.json()
+                            } else {
+                                console.log("Status: " + resp.status)
+                                return Promise.reject("server")
+                            }
+                        })
+                        .then(async result => {
+                            if (result.length !== 0) {
+                                await designBtn(result[0].login, "reg");
+                                patientId = result[0].patient.id;
+                                myAppointments();
+                            } else {
+                                document.getElementById("neDone").style.display = "block";
+                            }
+                        })
                 })
-                    .then(resp => {
-                        if (resp.status === 200) {
-                            return resp.json()
-                        } else {
-                            console.log("Status: " + resp.status)
-                            return Promise.reject("server")
-                        }
-                    });
-            })
         })
 
 }
@@ -304,8 +364,7 @@ function comeIn() {
         })
         .then(async result => {
             if (result.length !== 0) {
-                current_user = result[0];
-                await designBtn(result[0].login);
+                await designBtn(result[0].login, "log");
                 patientId = result[0].patient.id;
                 myAppointments();
             } else {
@@ -314,11 +373,31 @@ function comeIn() {
         })
 }
 
-async function designBtn(name) {
-    document.getElementById("neOk").style.display = "none";
-    document.getElementById("ok").style.display = "block";
+async function designBtn(name, type) {
+    if (type === "log") {
+        document.getElementById("neOk").style.display = "none";
+        document.getElementById("ok").style.display = "block";
+    }
+    if (type === "reg") {
+        document.getElementById("neDone").style.display = "none";
+        document.getElementById("done").style.display = "block";
+    }
     await new Promise(r => setTimeout(r, 1000));
-    document.getElementById("myForm").style.display = "none";
+    if (type === "log") {
+        document.getElementById("myForm").style.display = "none";
+        document.getElementById("login").value = "";
+        document.getElementById("password").value = "";
+    }
+    if (type === "reg") {
+        document.getElementById("form-signUp").style.display = "none";
+        document.getElementById("fio").value = "";
+        document.getElementById("bd").value = "";
+        document.getElementById("tel").value = "";
+        document.getElementById("region").value = "";
+        document.getElementById("address").value = "";
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+    }
     document.getElementById("white").style.display = "none";
 
     document.querySelector(".container").innerHTML += `<p id="newText">Здравствуйте,<br>${name}</p>
@@ -326,9 +405,7 @@ async function designBtn(name) {
 
     document.getElementById("btn-one").style.display = "none";
     document.getElementById("ok").style.display = "none";
-
-    document.getElementById("login").value = "";
-    document.getElementById("password").value = "";
+    document.getElementById("done").style.display = "none";
 
     document.getElementById("form-appoint").remove();
     document.getElementById("btn-app").style.display = "block";
@@ -336,14 +413,12 @@ async function designBtn(name) {
 
 function exit() {
     patientId = null;
-    current_user = null;
     document.getElementById("newText").remove();
     document.getElementById("btn-exit").remove();
     document.getElementById("btn-one").style.display = "block";
-    document.getElementById("btn-app").style.display="none";
+    document.getElementById("btn-app").style.display = "none";
 
-    document.getElementsByClassName("title-2")[1].insertAdjacentHTML("afterend",
-        `<div class="col" id="form-appoint">
+    document.getElementsByClassName("title-2")[1].insertAdjacentHTML("afterend", `<div class="col" id="form-appoint">
         <label for="name">Как вас зовут?</label>
         <input id="name" type="text" class="in" placeholder="ФИО">
         <label for="db">Дата рождения</label>
@@ -395,24 +470,24 @@ function load_clinics(choice_region) {
     document.getElementById("specialist").innerHTML = `<option selected>-</option>`;
     document.getElementById("doctor").innerHTML = `<option selected>-</option>`;
     fetch("/clinic/find/" + choice_region, {
-                method: "get", headers: {"Content-Type": "application/json"}//, body: JSON.stringify(Array.from(distSet))
-            })
-                .then(resp => {
-                    if (resp.status === 200) {
-                        return resp.json()
-                    } else {
-                        console.log("Status: " + resp.status)
-                        return Promise.reject("server")
-                    }
-                })
-                .then(dataJson => {
-                    document.getElementById("hospital").innerHTML = `<option selected>-</option>`;
-                    dataJson.forEach(function (clinic) {
-                        document.getElementById("hospital").innerHTML += `<option>${clinic.number}</option>`
-                    });
+        method: "get", headers: {"Content-Type": "application/json"}//, body: JSON.stringify(Array.from(distSet))
+    })
+        .then(resp => {
+            if (resp.status === 200) {
+                return resp.json()
+            } else {
+                console.log("Status: " + resp.status)
+                return Promise.reject("server")
+            }
+        })
+        .then(dataJson => {
+            document.getElementById("hospital").innerHTML = `<option selected>-</option>`;
+            dataJson.forEach(function (clinic) {
+                document.getElementById("hospital").innerHTML += `<option>${clinic.number}</option>`
+            });
 
-                })
-        }
+        })
+}
 
 function load_symptoms() {
     fetch("/symptom/all", {
@@ -511,7 +586,6 @@ function changeInput(e) {
 }
 
 
-
 function load_doctors() {
     fetch("/doctor/all", {
         method: "get", headers: {"Content-Type": "application/json"}
@@ -554,6 +628,10 @@ function closeForm(formName) {
         document.getElementById("recommendations").innerHTML = ``;
         document.getElementById("treat_type").innerHTML = ``;
         document.getElementById("rec_specialists").innerHTML = ``;
+    }
+    if (formName === "myForm3") {
+        document.getElementById("registration").hidden = false;
+        document.querySelector(`#talonRes h4`).innerHTML = `Доступные талоны:`;
     }
 }
 

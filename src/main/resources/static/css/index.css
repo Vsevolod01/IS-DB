@@ -258,11 +258,11 @@ footer p {
     text-align: center;
 }
 
-#ok {
+#ok, #done, #appOk {
     color: #29bd29;
 }
 
-#neOk {
+#neOk, #neDone, #appFail {
     color: red;
 }
 
@@ -304,7 +304,7 @@ footer p {
     background-color: orangered;
 }
 
-#form-singUp {
+#form-signUp {
     margin-top: -50px;
 }
 
@@ -324,7 +324,7 @@ footer p {
     background-color: white;
 }
 
-#myForm3 form-container {
+#myForm3 .form-container {
     max-height: 519px;
     overflow: auto;
 }
@@ -394,7 +394,7 @@ footer p {
     margin-bottom: 15px;
 }
 
-.app p{
+.app p {
     font-size: 18px;
     margin: 0 0 5px;
 }
